@@ -1,0 +1,68 @@
+# macOS / Finder
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+TemporaryItems
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Dart / Flutter (pub, tool, cache)
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.fvm/
+coverage/
+
+# Build outputs
+build/
+
+# dartdoc
+doc/api/
+
+# Web (dart2js)
+*.dart.js
+*.info.json
+*.js
+*.js_
+*.js.deps
+*.js.map
+
+# Android (Gradle)
+android/.gradle/
+android/local.properties
+android/key.properties
+android/**/build/
+
+# iOS (Xcode / CocoaPods)
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcbkptlist
+
+# macOS (CocoaPods / Xcode)
+macos/Pods/
+macos/Flutter/ephemeral/
+macos/Runner.xcodeproj/xcuserdata/
+macos/Runner.xcworkspace/xcuserdata/
+
+# Windows
+windows/flutter/ephemeral/
+
+# Linux
+linux/flutter/ephemeral/

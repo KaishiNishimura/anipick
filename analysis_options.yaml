@@ -1,0 +1,10 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  # 生成物やビルド成果物は解析対象から除外
+  exclude:
+    - build/**
+    - .dart_tool/**
+    - ios/Pods/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
