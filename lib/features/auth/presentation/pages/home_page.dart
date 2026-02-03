@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,19 +13,20 @@ final class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncState = ref.watch(authSessionControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ホーム'),
+    return AdaptiveScaffold(
+      appBar: AdaptiveAppBar(
+        title: 'ホーム',
         actions: [
-          TextButton(
+          AdaptiveAppBarAction(
+            icon: Icons.logout,
+            title: 'ログアウト',
             onPressed: asyncState.isLoading
-                ? null
+                ? () {}
                 : () async {
                     await ref
                         .read(authSessionControllerProvider.notifier)
                         .signOut();
                   },
-            child: const Text('ログアウト'),
           ),
         ],
       ),

@@ -1,4 +1,6 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/auth/auth_session_controller.dart';
+import 'package:anipick/core/theme/app_theme.dart';
 import 'package:anipick/features/auth/presentation/pages/home_page.dart';
 import 'package:anipick/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +19,13 @@ final class MyApp extends StatelessWidget {
   @override
   /// ウィジェットを構築
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return AdaptiveApp(
       title: 'AniPick',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      themeMode: ThemeMode.dark,
+      materialLightTheme: AppTheme.dark,
+      materialDarkTheme: AppTheme.dark,
+      cupertinoLightTheme: AppTheme.cupertinoLight,
+      cupertinoDarkTheme: AppTheme.cupertinoDark,
       home: const AppRootPage(),
     );
   }
@@ -39,10 +43,8 @@ final class AppRootPage extends ConsumerWidget {
 
     return auth.when(
       data: (state) => state.isSignedIn ? const HomePage() : const LoginPage(),
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (_, _) => const Scaffold(
+      loading: () => const AdaptiveScaffold(body: SizedBox.shrink()),
+      error: (_, _) => const AdaptiveScaffold(
         body: Center(child: Text('起動に失敗しました')),
       ),
     );
