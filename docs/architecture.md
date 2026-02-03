@@ -12,6 +12,7 @@
 ## 採用スタック（決定事項）
 
 * 状態管理 / DI：**Riverpod**
+* Provider定義：**Riverpod Generator（`riverpod_annotation` + `riverpod_generator`）**
 * ViewModel相当：**`AutoDisposeAsyncNotifier` / `AutoDisposeNotifier`**
 * 層構造：**presentation / domain / data**
 * 依存方向：**presentation → domain ← data**（domain は外側を知らない）
@@ -51,6 +52,8 @@ lib/
     utils/
   features/
     <feature>/
+      di/
+        providers.dart
       presentation/
         pages/
         widgets/
@@ -69,10 +72,17 @@ lib/
         repositories/
 ```
 
+### Provider（DI）配置ルール（決定）
+
+* feature内の依存関係（Repository実装 / DataSource / UseCase / Controller Provider）は、原則として **`features/<feature>/di/` 配下に集約**する
+* Controller本体は `presentation/controllers/` に置き、**DI配線（Provider定義）とは分離**する
+* `core` の基盤Provider（HTTPクライアント、Storage等）は `core/` に置く
+* Providerは **feature外へ漏らさない**（`core` を除く）
+
 ### 命名ルール
 
 * feature名：`snake_case` 推奨（例：`today_recommendations`, `anime_detail`）
-* UseCase：**動詞 + 目的語**（例：`GetTodayRecommendations`, `ToggleShelf`）
+* UseCase：**動詞 + 目的語 + `UseCase`**（例：`GetTodayRecommendationsUseCase`, `ToggleShelfUseCase`）
 * Controller Provider：`xxxControllerProvider`
 * State：`XxxUiState`
 * Repository interface：`XxxRepository`
@@ -153,3 +163,20 @@ lib/
 * Riverpod を DI コンテナとして使う
 * `core` で基盤（Dio/DB/env）を提供し、feature内で積み上げる
 * Providerは **feature外へ漏らさない**（coreを除く）
+
+---
+
+## Riverpod Generator 運用（決定）
+
+* Provider定義は `@riverpod` を用いて記述し、`*.g.dart` は自動生成する
+* 生成コードは手で編集しない
+
+### 生成手順
+
+* `dart run build_runner build -d`
+
+### ファイル構成
+
+* Provider定義ファイルには以下を含める
+  * `import 'package:riverpod_annotation/riverpod_annotation.dart';`
+  * `part '<file_name>.g.dart';`

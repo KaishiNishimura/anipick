@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   /// ウィジェットを構築
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Anipick',
+      title: 'AniPick',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
