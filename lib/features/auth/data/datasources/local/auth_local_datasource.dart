@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// アクセストークンを安全領域へ永続化するローカルデータソース
-class AuthLocalDataSource {
+final class AuthLocalDataSource {
   /// データソースを作成
   const AuthLocalDataSource(this._storage);
 

@@ -1,5 +1,5 @@
 /// UI に表示するエラー情報を表す
-class UiError {
+final class UiError {
   /// エラー情報を作成
   const UiError({required this.message, this.canRetry = true});
 

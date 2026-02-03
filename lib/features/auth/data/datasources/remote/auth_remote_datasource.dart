@@ -6,7 +6,7 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:http/http.dart' as http;
 
 /// OAuth 認証を実行するリモートデータソースを定義
-class AuthRemoteDataSource {
+final class AuthRemoteDataSource {
   /// データソースを作成
   const AuthRemoteDataSource(this._httpClient);
 
@@ -87,7 +87,7 @@ class AuthRemoteDataSource {
 }
 
 /// HTTP エラーを表す例外
-class HttpException implements Exception {
+final class HttpException implements Exception {
   /// 例外を作成
   const HttpException(this.statusCode);
 

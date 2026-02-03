@@ -1,5 +1,5 @@
 /// Annict API の環境変数設定をまとめて管理
-class AnnictEnv {
+final class AnnictEnv {
   /// ユーティリティクラスとして利用
   const AnnictEnv._();
 

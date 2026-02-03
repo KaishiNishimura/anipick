@@ -89,6 +89,11 @@ lib/
 * Repository 実装：`XxxRepositoryImpl`
 * DataSource：`XxxRemoteDataSource`, `XxxLocalDataSource`
 
+### クラス宣言ルール
+
+* 具体クラスは原則 **`final class`** とする
+* `abstract` / `sealed` / `mixin` は `final class` にできないため例外
+
 ---
 
 ## Riverpod 設計（決定）

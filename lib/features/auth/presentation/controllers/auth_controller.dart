@@ -8,7 +8,7 @@ part 'auth_controller.g.dart';
 
 /// 認証状態を管理
 @riverpod
-class AuthController extends _$AuthController {
+final class AuthController extends _$AuthController {
   @override
   Future<AuthUiState> build() async {
     final usecase = ref.read(getSavedAccessTokenProvider);

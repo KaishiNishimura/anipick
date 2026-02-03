@@ -1,7 +1,7 @@
 import 'package:anipick/features/auth/domain/repositories/auth_repository.dart';
 
 /// サインアウトして保存済みトークンを削除するユースケースを定義
-class SignOutUseCase {
+final class SignOutUseCase {
   /// ユースケースを作成
   const SignOutUseCase(this._repository);
 

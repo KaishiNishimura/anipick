@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// ホーム画面を表示
-class HomePage extends ConsumerWidget {
+final class HomePage extends ConsumerWidget {
   /// 画面を作成
   const HomePage({super.key});
 

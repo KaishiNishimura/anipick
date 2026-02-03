@@ -3,7 +3,7 @@ import 'package:anipick/features/auth/domain/entities/access_token.dart';
 import 'package:anipick/features/auth/domain/repositories/auth_repository.dart';
 
 /// サインインしてアクセストークンを取得するユースケースを定義
-class SignInUseCase {
+final class SignInUseCase {
   /// ユースケースを作成
   const SignInUseCase(this._repository);
 

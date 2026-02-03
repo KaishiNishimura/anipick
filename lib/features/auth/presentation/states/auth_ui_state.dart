@@ -1,7 +1,7 @@
 import 'package:anipick/features/auth/domain/entities/access_token.dart';
 
 /// UI 層で扱う認証状態を表す
-class AuthUiState {
+final class AuthUiState {
   /// 認証状態を作成
   const AuthUiState({required this.accessToken});
 

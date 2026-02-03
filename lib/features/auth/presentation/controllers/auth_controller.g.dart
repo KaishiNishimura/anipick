@@ -36,7 +36,7 @@ final class AuthControllerProvider
   AuthController create() => AuthController();
 }
 
-String _$authControllerHash() => r'2d28f1af0c42d13a67014fe105a10ae6154e8bc7';
+String _$authControllerHash() => r'9b95283aa470c1862b43311a2c7cb43065d3331f';
 
 /// 認証状態を管理
 

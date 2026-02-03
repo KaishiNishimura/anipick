@@ -10,7 +10,7 @@ void main() {
 }
 
 /// アプリ全体のウィジェットを構築
-class MyApp extends StatelessWidget {
+final class MyApp extends StatelessWidget {
   /// ウィジェットを作成
   const MyApp({super.key});
 
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 /// 認証状態に応じて初期画面を切り替え
-class AppRootPage extends ConsumerWidget {
+final class AppRootPage extends ConsumerWidget {
   /// ウィジェットを作成
   const AppRootPage({super.key});
 

@@ -1,5 +1,5 @@
 /// アクセストークンを表す値オブジェクト
-class AccessToken {
+final class AccessToken {
   /// アクセストークンを作成
   const AccessToken(this.value);
 

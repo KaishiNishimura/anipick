@@ -6,7 +6,7 @@ import 'package:anipick/features/auth/domain/entities/access_token.dart';
 import 'package:anipick/features/auth/domain/repositories/auth_repository.dart';
 
 /// 認証リポジトリの実装
-class AuthRepositoryImpl implements AuthRepository {
+final class AuthRepositoryImpl implements AuthRepository {
   /// リポジトリを作成
   const AuthRepositoryImpl({
     required AuthRemoteDataSource remote,

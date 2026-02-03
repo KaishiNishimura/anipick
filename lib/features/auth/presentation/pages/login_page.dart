@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// サインイン画面を表示
-class LoginPage extends ConsumerWidget {
+final class LoginPage extends ConsumerWidget {
   /// 画面を作成
   const LoginPage({super.key});
 
