@@ -1,4 +1,4 @@
-import 'package:anipick/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:anipick/features/auth/presentation/pages/home_page.dart';
 import 'package:anipick/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ final class AppRootPage extends ConsumerWidget {
   @override
   /// ウィジェットを構築
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authControllerProvider);
+    final auth = ref.watch(authSessionControllerProvider);
 
     return auth.when(
       data: (state) => state.isSignedIn ? const HomePage() : const LoginPage(),

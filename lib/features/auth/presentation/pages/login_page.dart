@@ -1,4 +1,4 @@
-import 'package:anipick/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,7 +10,7 @@ final class LoginPage extends ConsumerWidget {
   @override
   /// 画面を構築
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncState = ref.watch(authControllerProvider);
+    final asyncState = ref.watch(authSessionControllerProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('ログイン')),
@@ -28,7 +28,7 @@ final class LoginPage extends ConsumerWidget {
                     ? null
                     : () async {
                         final controller = ref.read(
-                          authControllerProvider.notifier,
+                          authSessionControllerProvider.notifier,
                         );
                         final uiError = await controller.signIn();
                         if (uiError != null && context.mounted) {
