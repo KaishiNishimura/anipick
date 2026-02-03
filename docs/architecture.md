@@ -21,6 +21,14 @@
 
 ---
 
+## 画面・機能の基本方針（運用ルール）
+
+* 基本は **feature中心（画面ごとのAPI取得が多い）** とし、画面ごとに UseCase を呼び出してUIを組み立てる
+* 画面の状態は原則 **1 Page = 1 Controller**（その画面の入力・ロード状態・表示データを集約）
+* ただし **認証（セッション）など複数画面で共有される状態は「横断状態」**として扱い、特定のPageに閉じない
+
+---
+
 ## 全体の考え方（最重要）
 
 ### 1) 層の責務
@@ -49,6 +57,8 @@ lib/
     error/
     network/
     persistence/
+    ui/
+      widgets/
     utils/
   features/
     <feature>/
@@ -72,12 +82,31 @@ lib/
         repositories/
 ```
 
+### UI（Page/Widget）配置ルール（決定）
+
+* **Page**：**Routeのエントリ**（画面単位）
+* `features/<feature>/presentation/pages/<page>/widgets/` は **page専用部品**とし、**同ページ以外からの import を禁止**する
+* 同じUIを **2回使ったら昇格**させる
+  * feature内で複数ページから使う → `features/<feature>/presentation/widgets/`
+  * アプリ全体で使う → `core/ui/widgets/`
+* “たぶん使うかも” を理由に昇格しない
+* `core/ui/widgets/`（アプリ共通UI）には **Provider/State を生やさない**（原則pureにして引数で受け取る）
+
 ### Provider（DI）配置ルール（決定）
 
 * feature内の依存関係（Repository実装 / DataSource / UseCase / Controller Provider）は、原則として **`features/<feature>/di/` 配下に集約**する
 * Controller本体は `presentation/controllers/` に置き、**DI配線（Provider定義）とは分離**する
 * `core` の基盤Provider（HTTPクライアント、Storage等）は `core/` に置く
-* Providerは **feature外へ漏らさない**（`core` を除く）
+* Providerは **feature外へ漏らさない**（`core` / `app` 相当の横断状態を除く）
+
+#### 横断状態（認証/セッション等）の例外ルール（決定）
+
+* 認証状態のように **複数画面で参照・更新される状態**は、単一featureの画面に閉じず「横断状態」として扱う
+* 横断状態のProviderは **`core/`（または `app/` 相当）**に配置してよい
+* 横断状態を扱う feature（例：`features/auth`）は
+  * UseCase / Repository / DataSource などの実装を持つ（featureとして完結）
+  * 横断状態Providerから利用されることを前提にしてよい
+* UI（page）は原則として **横断状態Providerを watch**し、画面遷移や表示分岐に利用する
 
 ### 命名ルール
 
@@ -105,6 +134,12 @@ lib/
 * **`AutoDisposeAsyncNotifier<XxxUiState>`**
 * 初期ロードは `build()` に書く（初回に自動で走る）
 
+#### 横断状態（認証/セッション等）
+
+* 複数ページで共有する状態は「Page専用Controller」とは別に扱う
+* Providerは **`core/`（または `app/`）**に置き、どのfeature/pageからも参照できる入口にする
+* UIの都合で保持したい場合でも、原則として **画面寿命に依存しない設計**にする
+
 #### 軽量ローカル状態（同期のみ）
 
 * **`AutoDisposeNotifier<XxxUiState>`**
@@ -115,8 +150,6 @@ lib/
 * **基本は autoDispose**
 * “状態を保持したい” は Controller で頑張らず、**Repository側でキャッシュ**する
   （画面寿命に状態保持を依存させない）
-
----
 
 ## State 設計（決定）
 
@@ -133,21 +166,12 @@ lib/
 * `TextEditingController` や `FocusNode`（UI層に置く）
 * `Dio` / DB / DataSource / Repository（Controller は UseCase だけを見る）
 
----
-
 ## UIイベント（副作用）の扱い（決定）
 
 ### 方針
 
 * SnackBar、Dialog、画面遷移などの“一回だけやりたいこと”は **Stateに混ぜない**
 * UI側で `ref.listen` し、差分を検知して副作用を実行する
-
-### 理由
-
-* Stateに混ぜると、再描画・再購読で **二度発火**しやすい
-* 「状態」と「副作用」を分離すると事故が激減する
-
----
 
 ## Error 設計（決定）
 
@@ -167,7 +191,7 @@ lib/
 
 * Riverpod を DI コンテナとして使う
 * `core` で基盤（Dio/DB/env）を提供し、feature内で積み上げる
-* Providerは **feature外へ漏らさない**（coreを除く）
+* Providerは **feature外へ漏らさない**（`core` / `app` 相当の横断状態を除く）
 
 ---
 
