@@ -68,11 +68,21 @@ final class LoginPage extends ConsumerWidget {
                   size: AdaptiveButtonSize.large,
                   color: colorScheme.primary,
                   enabled: !asyncState.isLoading,
-                  borderRadius: BorderRadius.circular(999),
-                  child: const Text(
-                    'Annictアカウントで始める',
-                    style: AppTextStyles.bodyEmphasized,
-                  ),
+                  child: asyncState.isLoading
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : const Text(
+                          'Annictアカウントで始める',
+                          style: AppTextStyles.bodyEmphasized,
+                        ),
                 ),
               ),
             ),
