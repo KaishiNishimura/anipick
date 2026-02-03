@@ -1,18 +1,22 @@
 name: anipick
 description: "iOS/Android向けAnnictクライアント"
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 environment:
   sdk: ^3.10.8
 
 dependencies:
+  crypto: ^3.0.3
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
   flutter_hooks: ^0.21.3+1
   flutter_riverpod: ^3.2.0
+  flutter_secure_storage: ^9.2.4
+  flutter_web_auth_2: ^4.0.3
   freezed: ^3.2.3
   hooks_riverpod: ^3.2.0
+  http: ^1.2.2
   very_good_analysis: ^10.0.0
 
 dev_dependencies:
