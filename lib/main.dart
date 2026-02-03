@@ -1,71 +1,51 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:anipick/core/auth/auth_session_controller.dart';
+import 'package:anipick/core/theme/app_theme.dart';
+import 'package:anipick/features/auth/presentation/pages/home_page.dart';
+import 'package:anipick/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// アプリの起動
+/// アプリを起動
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-/// アプリのルートウィジェット
-class MyApp extends StatelessWidget {
-  /// [MyApp] の生成
+/// アプリ全体のウィジェットを構築
+final class MyApp extends StatelessWidget {
+  /// ウィジェットを作成
   const MyApp({super.key});
 
   @override
+  /// ウィジェットを構築
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return AdaptiveApp(
+      title: 'AniPick',
+      themeMode: ThemeMode.dark,
+      materialLightTheme: AppTheme.dark,
+      materialDarkTheme: AppTheme.dark,
+      cupertinoLightTheme: AppTheme.cupertinoDark,
+      cupertinoDarkTheme: AppTheme.cupertinoDark,
+      home: const AppRootPage(),
     );
   }
 }
 
-/// カウンター表示のサンプル画面
-class MyHomePage extends StatefulWidget {
-  /// [MyHomePage] の生成
-  const MyHomePage({required this.title, super.key});
-
-  /// 画面タイトル
-  final String title;
+/// 認証状態に応じて初期画面を切り替え
+final class AppRootPage extends ConsumerWidget {
+  /// ウィジェットを作成
+  const AppRootPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  /// ウィジェットを構築
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authSessionControllerProvider);
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    return auth.when(
+      data: (state) => state.isSignedIn ? const HomePage() : const LoginPage(),
+      loading: () => const AdaptiveScaffold(body: SizedBox.shrink()),
+      error: (_, _) => const AdaptiveScaffold(
+        body: Center(child: Text('起動に失敗しました')),
       ),
     );
   }

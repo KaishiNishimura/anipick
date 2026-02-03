@@ -1,0 +1,6 @@
+{
+  "ANNICT_CLIENT_ID": "xxxx",
+  "ANNICT_CLIENT_SECRET": "xxxx",
+  "ANNICT_REDIRECT_URI": "anipick://oauth-callback",
+  "ANNICT_SCOPE": "read write"
+}

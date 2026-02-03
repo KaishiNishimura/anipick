@@ -29,6 +29,14 @@ build/
 # dartdoc
 doc/api/
 
+# Local env files (secrets)
+env/*.json
+!env/*.json.example
+.env
+.env.*
+!.env.example
+!.env.*.example
+
 # Web (dart2js)
 *.dart.js
 *.info.json
