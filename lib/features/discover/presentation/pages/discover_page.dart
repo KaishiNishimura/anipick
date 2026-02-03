@@ -5,6 +5,8 @@ import 'package:anipick/core/error/ui_error.dart';
 import 'package:anipick/features/discover/domain/entities/work.dart';
 import 'package:anipick/features/discover/presentation/controllers/discover_controller.dart';
 import 'package:anipick/features/discover/presentation/states/discover_ui_state.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,6 +22,8 @@ final class DiscoverPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       body: asyncState.when(
+        skipLoadingOnReload: true,
+        skipLoadingOnRefresh: true,
         data: (state) => _DiscoverBody(
           state: state,
           isAuthLoading: auth.isLoading,
@@ -100,33 +104,126 @@ final class _DiscoverBody extends StatelessWidget {
 
     final navigationTopPadding = MediaQuery.paddingOf(context).top;
 
+    final contentChildren = <Widget>[
+      _TopHeroCarousel(
+        works: topWorks.take(3).toList(),
+        onReload: onReload,
+        onSignOut: onSignOut,
+        isAuthLoading: isAuthLoading,
+      ),
+      const SizedBox(height: 16),
+      const _SectionTitleRow(
+        title: '今期の話題',
+        trailing: Icon(Icons.chevron_right, size: 18),
+      ),
+      const SizedBox(height: 12),
+      _PosterRow(works: state.currentTrending.take(20).toList()),
+      const SizedBox(height: 20),
+      for (final seasonWorks in state.previousSeasonTrending) ...[
+        _SeasonHeader(title: seasonWorks.seasonText),
+        const SizedBox(height: 12),
+        _PosterRow(works: seasonWorks.works.take(20).toList()),
+        const SizedBox(height: 20),
+      ],
+    ];
+
+    final isCupertinoRefresh = switch (defaultTargetPlatform) {
+      TargetPlatform.iOS || TargetPlatform.macOS => true,
+      _ => false,
+    };
+
     return ColoredBox(
       color: const Color(0xFF252032),
-      child: ListView(
-        padding: EdgeInsets.only(top: navigationTopPadding, bottom: 24),
-        children: [
-          _TopHeroCarousel(
-            works: topWorks.take(3).toList(),
-            onReload: onReload,
-            onSignOut: onSignOut,
-            isAuthLoading: isAuthLoading,
-          ),
-          const SizedBox(height: 16),
-          const _SectionTitleRow(
-            title: '今期の話題',
-            trailing: Icon(Icons.chevron_right, size: 18),
-          ),
-          const SizedBox(height: 12),
-          _PosterRow(works: state.currentTrending.take(20).toList()),
-          const SizedBox(height: 20),
-          for (final seasonWorks in state.previousSeasonTrending) ...[
-            _SeasonHeader(title: seasonWorks.seasonText),
-            const SizedBox(height: 12),
-            _PosterRow(works: seasonWorks.works.take(20).toList()),
-            const SizedBox(height: 20),
-          ],
-        ],
-      ),
+      child: isCupertinoRefresh
+          ? CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                CupertinoSliverRefreshControl(
+                  refreshTriggerPullDistance: 120,
+                  refreshIndicatorExtent: 72,
+                  builder:
+                      (
+                        context,
+                        refreshState,
+                        pulledExtent,
+                        refreshTriggerPullDistance,
+                        refreshIndicatorExtent,
+                      ) {
+                        final safePulledExtent = pulledExtent.clamp(
+                          0.0,
+                          refreshIndicatorExtent,
+                        );
+
+                        final opacity =
+                            (safePulledExtent / refreshIndicatorExtent).clamp(
+                              0.0,
+                              1.0,
+                            );
+
+                        final child = switch (refreshState) {
+                          RefreshIndicatorMode.refresh ||
+                          RefreshIndicatorMode.armed =>
+                            const CupertinoActivityIndicator(
+                              radius: 12,
+                            ),
+                          RefreshIndicatorMode.drag =>
+                            CupertinoActivityIndicator.partiallyRevealed(
+                              radius: 12,
+                              progress:
+                                  (pulledExtent / refreshTriggerPullDistance)
+                                      .clamp(0.0, 1.0),
+                            ),
+                          _ => const SizedBox.shrink(),
+                        };
+
+                        return Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            height: safePulledExtent,
+                            child: Center(
+                              child: Opacity(
+                                opacity: opacity,
+                                child: child,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                  onRefresh: () async {
+                    final reload = onReload;
+                    if (reload == null) return;
+                    await Future.wait([
+                      reload(),
+                      Future<void>.delayed(const Duration(milliseconds: 800)),
+                    ]);
+                  },
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.only(
+                    top: navigationTopPadding,
+                    bottom: 24,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(contentChildren),
+                  ),
+                ),
+              ],
+            )
+          : RefreshIndicator(
+              onRefresh: () async {
+                final reload = onReload;
+                if (reload == null) return;
+                await Future.wait([
+                  reload(),
+                  Future<void>.delayed(const Duration(milliseconds: 800)),
+                ]);
+              },
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.only(top: navigationTopPadding, bottom: 24),
+                children: contentChildren,
+              ),
+            ),
     );
   }
 }
@@ -275,10 +372,6 @@ final class _TopHeroCarouselState extends State<_TopHeroCarousel> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _GlassIconButton(
-                              icon: Icons.refresh,
-                              onPressed: widget.onReload,
-                            ),
                             _GlassIconButton(
                               icon: Icons.logout,
                               onPressed: widget.isAuthLoading
