@@ -12,12 +12,55 @@ final class AppTheme {
     return ThemeData(
       brightness: Brightness.dark,
       colorScheme: AppColorScheme.dark,
+
+      fontFamily: 'SF Pro Display',
+      fontFamilyFallback: const [
+        'Hiragino Kaku Gothic ProN',
+        'Hiragino Kaku Gothic Pro',
+      ],
+
+      // 主要色（Material2 系APIや一部ウィジェットが参照するため、ColorSchemeに加えて明示）
+      primaryColor: AppColors.primary_500,
+
+      // ダイアログの背景色（`dialogBackgroundColor` は非推奨のため `DialogTheme` で指定）
+      dialogTheme: const DialogThemeData(backgroundColor: AppColors.accent_900),
+
+      // アイコンのデフォルト色
+      iconTheme: const IconThemeData(color: Colors.white),
+      primaryIconTheme: const IconThemeData(color: Colors.white),
       scaffoldBackgroundColor: AppColors.accent_900,
+
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.accent_900,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
+
+      // 読み込みインジケータ等の基準色
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: AppColors.primary_500,
+      ),
+
+      // TextField など入力系の見た目をある程度統一
+      inputDecorationTheme: InputDecorationTheme(
+        isDense: true,
+        filled: true,
+        fillColor: AppColors.accent_800,
+        hintStyle: const TextStyle(color: AppColors.accent_400),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.accent_700),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.accent_700),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.primary_500),
+        ),
+      ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary_500,
@@ -31,18 +74,18 @@ final class AppTheme {
   }
 
   /// iOS 向けのライトテーマ
-  static const cupertinoLight = CupertinoThemeData(
-    brightness: Brightness.dark,
-    primaryColor: AppColors.primary_500,
-    scaffoldBackgroundColor: AppColors.accent_900,
-    barBackgroundColor: AppColors.accent_900,
-  );
+  static CupertinoThemeData get cupertinoDark {
+    return const CupertinoThemeData(
+      brightness: Brightness.dark,
 
-  /// iOS 向けのダークテーマ
-  static const cupertinoDark = CupertinoThemeData(
-    brightness: Brightness.dark,
-    primaryColor: AppColors.primary_500,
-    scaffoldBackgroundColor: AppColors.accent_900,
-    barBackgroundColor: AppColors.accent_900,
-  );
+      // iOS側での強調色（CupertinoButton / スイッチ等で使われる）
+      primaryColor: AppColors.primary_500,
+
+      // iOS側のScaffold背景
+      scaffoldBackgroundColor: AppColors.accent_900,
+
+      // ナビゲーションバー等のバー背景
+      barBackgroundColor: AppColors.accent_900,
+    );
+  }
 }

@@ -16,6 +16,7 @@
 * ViewModel相当：**`AutoDisposeAsyncNotifier` / `AutoDisposeNotifier`**
 * 層構造：**presentation / domain / data**
 * 依存方向：**presentation → domain ← data**（domain は外側を知らない）
+* UI基盤：**adaptive_platform_ui**（iOS/Androidでプラットフォームに応じた見た目を自動選択）
 * UIイベント（SnackBar / Navigation 等）：**Stateに混ぜず、UI側で `ref.listen` による副作用で処理**
 * エラー設計：**domain は Failure、presentation は UiError**
 
@@ -26,6 +27,29 @@
 * 基本は **feature中心（画面ごとのAPI取得が多い）** とし、画面ごとに UseCase を呼び出してUIを組み立てる
 * 画面の状態は原則 **1 Page = 1 Controller**（その画面の入力・ロード状態・表示データを集約）
 * ただし **認証（セッション）など複数画面で共有される状態は「横断状態」**として扱い、特定のPageに閉じない
+
+---
+
+## UI（Adaptive UI）設計
+
+### ルート構成
+
+* アプリのルートは **`AdaptiveApp`** を使用する（`MaterialApp` / `CupertinoApp` を直接使わない）
+* `themeMode` / Materialテーマ / Cupertinoテーマは **`core/theme/AppTheme`** で一元管理する
+* 色/配色/テーマ定義は **`lib/core/theme`**（`AppTheme` / `AppColorScheme` / `AppColors`）を参照する
+
+### 画面の基本ウィジェット
+
+* 画面の骨格は原則 **`AdaptiveScaffold`** を使用する
+* AppBar は原則 **`AdaptiveAppBar`** を使用し、アクションは **`AdaptiveAppBarAction`** を使用する
+* ボタンは原則 **`AdaptiveButton`** を使用する
+* トースト/通知は原則 **`AdaptiveSnackBar.show`** を使用する
+
+### Platform差分を入れる場所
+
+* 基本は `adaptive_platform_ui` の自動判定に任せる
+* どうしても分岐が必要な場合のみ `PlatformInfo` を用いて UI層で分岐する
+* domain/data 層には platform 分岐を持ち込まない
 
 ---
 

@@ -1,5 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/auth/auth_session_controller.dart';
+import 'package:anipick/core/theme/app_text_styles.dart';
 import 'package:anipick/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,13 +14,14 @@ final class LoginPage extends ConsumerWidget {
   /// 画面を構築
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncState = ref.watch(authSessionControllerProvider);
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return AdaptiveScaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          ColoredBox(color: colorScheme.surface),
+          ColoredBox(color: theme.scaffoldBackgroundColor),
           Assets.images.loginBg.image(fit: BoxFit.cover),
           Center(
             child: Padding(
@@ -33,14 +35,10 @@ final class LoginPage extends ConsumerWidget {
                     fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 20),
-                  Text(
+                  const Text(
                     'あなたの“見たい”が見つかる。',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: colorScheme.onSurface,
-                    ),
+                    style: AppTextStyles.title2Emphasized,
                   ),
                 ],
               ),
@@ -50,49 +48,30 @@ final class LoginPage extends ConsumerWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 28),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: AdaptiveButton.child(
-                    onPressed: asyncState.isLoading
-                        ? null
-                        : () async {
-                            final controller = ref.read(
-                              authSessionControllerProvider.notifier,
+                padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                child: AdaptiveButton.child(
+                  onPressed: asyncState.isLoading
+                      ? null
+                      : () async {
+                          final controller = ref.read(
+                            authSessionControllerProvider.notifier,
+                          );
+                          final uiError = await controller.signIn();
+                          if (uiError != null && context.mounted) {
+                            AdaptiveSnackBar.show(
+                              context,
+                              message: uiError.message,
+                              type: AdaptiveSnackBarType.error,
                             );
-                            final uiError = await controller.signIn();
-                            if (uiError != null && context.mounted) {
-                              AdaptiveSnackBar.show(
-                                context,
-                                message: uiError.message,
-                                type: AdaptiveSnackBarType.error,
-                              );
-                            }
-                          },
-                    enabled: !asyncState.isLoading,
-                    color: colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 14,
-                    ),
-                    borderRadius: BorderRadius.circular(999),
-                    child: asyncState.isLoading
-                        ? SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: colorScheme.onPrimary,
-                            ),
-                          )
-                        : const Text(
-                            'Annictアカウントで始める',
-                            style: TextStyle(
-                              fontSize: 17,
-                              height: 22 / 17,
-                              color: Colors.white,
-                            ),
-                          ),
+                          }
+                        },
+                  size: AdaptiveButtonSize.large,
+                  color: colorScheme.primary,
+                  enabled: !asyncState.isLoading,
+                  borderRadius: BorderRadius.circular(999),
+                  child: const Text(
+                    'Annictアカウントで始める',
+                    style: AppTextStyles.bodyEmphasized,
                   ),
                 ),
               ),

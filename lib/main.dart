@@ -24,7 +24,7 @@ final class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       materialLightTheme: AppTheme.dark,
       materialDarkTheme: AppTheme.dark,
-      cupertinoLightTheme: AppTheme.cupertinoLight,
+      cupertinoLightTheme: AppTheme.cupertinoDark,
       cupertinoDarkTheme: AppTheme.cupertinoDark,
       home: const AppRootPage(),
     );
