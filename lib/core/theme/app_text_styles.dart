@@ -5,12 +5,6 @@ final class AppTextStyles {
   /// インスタンス化を禁止
   const AppTextStyles._();
 
-  /// ログイン画面のキャッチコピー用スタイル
-  static const loginCatchCopy = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.w700,
-  );
-
   /// タイトル2の強調スタイル
   static const title2Emphasized = TextStyle(
     fontSize: 22,
