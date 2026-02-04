@@ -12,6 +12,16 @@ iOS/Android 向けの Annict クライアント（Flutter）。
 
 ---
 
+## 注意事項（現状の制限）
+
+- 実装済み画面は「ログイン画面」と「ホーム（Discover）画面」のみ
+- 「見たい」や「視聴中」などのステータス登録、各作品の詳細表示は未対応
+- 動作確認は iOS のみ
+- 一部サムネイルが表示されない場合あり（API 側で URL が保存されていないケース）
+- 画面全体のパフォーマンス最適化は未実施
+
+---
+
 ## 必要要件
 
 - FVM
@@ -77,7 +87,7 @@ fvm dart run build_runner build -d
 エントリポイント：
 
 - `lib/main.dart`
-  - `authSessionControllerProvider` の状態に応じて初期画面（`HomePage` / `LoginPage`）を切り替えます
+  - `authSessionControllerProvider` の状態に応じて初期画面（`DiscoverPage` / `LoginPage`）を切り替えます
 
 ---
 

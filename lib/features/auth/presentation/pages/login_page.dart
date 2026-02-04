@@ -36,7 +36,7 @@ final class LoginPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'あなたの“見たい”が見つかる。',
+                    '次に観るアニメが、すぐ見つかる',
                     textAlign: TextAlign.center,
                     style: AppTextStyles.title2Emphasized,
                   ),
