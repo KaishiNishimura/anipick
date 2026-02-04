@@ -8,7 +8,8 @@ final class _PageDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dotCount = count.clamp(1, 3);
+    final dotCount = count <= 0 ? 1 : count;
+    final safeIndex = index.clamp(0, dotCount - 1);
     return SizedBox(
       height: 44,
       child: Center(
@@ -21,7 +22,7 @@ final class _PageDots extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(dotCount, (i) {
-                final active = i == index;
+                final active = i == safeIndex;
                 return Padding(
                   padding: EdgeInsets.only(right: i == dotCount - 1 ? 0 : 8),
                   child: DecoratedBox(

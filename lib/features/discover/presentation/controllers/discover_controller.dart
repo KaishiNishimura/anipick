@@ -35,8 +35,9 @@ final class DiscoverController extends AsyncNotifier<DiscoverUiState> {
       throw _mapFailureToUiError(currentFailure ?? const UnexpectedFailure());
     }
 
-    final recommended = currentWorks.take(5).toList();
-    final currentTrending = currentWorks.skip(5).take(20).toList();
+    final shuffledCurrentWorks = [...currentWorks]..shuffle();
+    final recommended = shuffledCurrentWorks.take(5).toList();
+    final currentTrending = shuffledCurrentWorks.skip(5).take(20).toList();
 
     final previousSeasons = <String>[
       _previousSeasonName(currentSeason, 1),

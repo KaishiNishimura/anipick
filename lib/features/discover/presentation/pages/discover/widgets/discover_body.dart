@@ -19,13 +19,13 @@ final class _DiscoverBody extends StatelessWidget {
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     final topWorks = state.recommended.isNotEmpty
         ? state.recommended
-        : state.currentTrending;
+        : state.currentTrending.take(5);
 
     final navigationTopPadding = MediaQuery.paddingOf(context).top;
 
     final contentChildren = <Widget>[
       _TopHeroCarousel(
-        works: topWorks.take(3).toList(),
+        works: topWorks.toList(),
         onReload: onReload,
         onSignOut: onSignOut,
         isAuthLoading: isAuthLoading,
