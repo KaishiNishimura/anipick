@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:anipick/core/error/failure.dart';
 import 'package:anipick/core/error/ui_error.dart';
+import 'package:anipick/core/theme/app_text_styles.dart';
 import 'package:anipick/features/discover/domain/entities/work.dart';
 import 'package:anipick/features/discover/presentation/controllers/discover_controller.dart';
 import 'package:anipick/features/discover/presentation/states/discover_ui_state.dart';
@@ -134,8 +135,10 @@ final class _DiscoverBody extends StatelessWidget {
 
     return ColoredBox(
       color: const Color(0xFF252032),
-      child: isCupertinoRefresh
-          ? CustomScrollView(
+      child: Stack(
+        children: [
+          if (isCupertinoRefresh)
+            CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 CupertinoSliverRefreshControl(
@@ -194,7 +197,9 @@ final class _DiscoverBody extends StatelessWidget {
                     if (reload == null) return;
                     await Future.wait([
                       reload(),
-                      Future<void>.delayed(const Duration(milliseconds: 800)),
+                      Future<void>.delayed(
+                        const Duration(milliseconds: 800),
+                      ),
                     ]);
                   },
                 ),
@@ -209,21 +214,58 @@ final class _DiscoverBody extends StatelessWidget {
                 ),
               ],
             )
-          : RefreshIndicator(
+          else
+            RefreshIndicator(
               onRefresh: () async {
                 final reload = onReload;
                 if (reload == null) return;
                 await Future.wait([
                   reload(),
-                  Future<void>.delayed(const Duration(milliseconds: 800)),
+                  Future<void>.delayed(
+                    const Duration(milliseconds: 800),
+                  ),
                 ]);
               },
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.only(top: navigationTopPadding, bottom: 24),
+                padding: EdgeInsets.only(
+                  top: navigationTopPadding,
+                  bottom: 24,
+                ),
                 children: contentChildren,
               ),
             ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16, right: 16),
+                child: AdaptivePopupMenuButton.icon<String>(
+                  icon: PlatformInfo.isIOS26OrHigher()
+                      ? 'gearshape'
+                      : Icons.settings,
+                  items: [
+                    AdaptivePopupMenuItem(
+                      label: 'ログアウト',
+                      icon: PlatformInfo.isIOS26OrHigher()
+                          ? 'rectangle.portrait.and.arrow.right'
+                          : Icons.logout,
+                      value: 'logout',
+                    ),
+                  ],
+                  onSelected: (index, item) async {
+                    if (isAuthLoading) return;
+                    if (item.value != 'logout') return;
+                    final signOut = onSignOut;
+                    if (signOut == null) return;
+                    await signOut();
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -269,201 +311,174 @@ final class _TopHeroCarouselState extends State<_TopHeroCarousel> {
 
     return SizedBox(
       height: heroHeight + infoHeight,
-      child: PageView.builder(
-        controller: _controller,
-        itemCount: works.isEmpty ? 1 : works.length,
-        onPageChanged: (value) => setState(() => _index = value),
-        itemBuilder: (context, index) {
-          final work = works.isEmpty
-              ? const Work(
-                  id: 0,
-                  title: '',
-                  seasonName: '',
-                  seasonNameText: '',
-                  recommendedImageUrl: null,
-                  watchersCount: 0,
-                )
-              : works[index];
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _controller,
+            itemCount: works.isEmpty ? 1 : works.length,
+            onPageChanged: (value) => setState(() => _index = value),
+            itemBuilder: (context, index) {
+              final work = works.isEmpty
+                  ? const Work(
+                      id: 0,
+                      title: '',
+                      seasonName: '',
+                      seasonNameText: '',
+                      recommendedImageUrl: null,
+                      watchersCount: 0,
+                    )
+                  : works[index];
 
-          final imageUrl = work.recommendedImageUrl;
+              final imageUrl = work.recommendedImageUrl;
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: heroHeight,
-                child: Stack(
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          if (imageUrl != null && imageUrl.isNotEmpty)
-                            Image.network(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, progress) {
-                                if (progress == null) return child;
-                                return const ColoredBox(
-                                  color: Color(0xFF252032),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return const ColoredBox(
-                                  color: Color(0xFF252032),
-                                );
-                              },
-                            )
-                          else
-                            const ColoredBox(color: Color(0xFF252032)),
-                          Positioned(
-                            left: 0,
-                            top: 0,
-                            right: 0,
-                            height: 80,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    const Color(0xFF252032),
-                                    const Color(
-                                      0xFF010618,
-                                    ).withValues(alpha: 0),
-                                  ],
-                                  stops: const [0.1, 1],
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: heroHeight,
+                    child: Stack(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              if (imageUrl != null && imageUrl.isNotEmpty)
+                                Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (context, child, progress) {
+                                    if (progress == null) return child;
+                                    return const ColoredBox(
+                                      color: Color(0xFF252032),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const ColoredBox(
+                                      color: Color(0xFF252032),
+                                    );
+                                  },
+                                )
+                              else
+                                const ColoredBox(color: Color(0xFF252032)),
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                right: 0,
+                                height: 80,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        const Color(0xFF252032),
+                                        const Color(
+                                          0xFF010618,
+                                        ).withValues(alpha: 0),
+                                      ],
+                                      stops: const [0.1, 1],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            height: 140,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    const Color(
-                                      0xFF252032,
-                                    ).withValues(alpha: 0),
-                                    const Color(0xFF252032),
-                                  ],
-                                  stops: const [0, 0.9],
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                height: 140,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        const Color(
+                                          0xFF252032,
+                                        ).withValues(alpha: 0),
+                                        const Color(0xFF252032),
+                                      ],
+                                      stops: const [0, 0.9],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 16,
-                          left: 16,
-                          right: 16,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _GlassIconButton(
-                              icon: Icons.logout,
-                              onPressed: widget.isAuthLoading
-                                  ? null
-                                  : widget.onSignOut,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: infoHeight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Column(
-                    children: [
-                      Text(
-                        '今期の話題',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Text(
-                            work.title,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.displaySmall
-                                ?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _PrimaryPillButton(
-                            label: '見たい',
-                            icon: Icons.add,
-                            onPressed: () {},
-                          ),
-                          const SizedBox(width: 12),
-                          _GlassCircleButton(
-                            icon: Icons.more_horiz,
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      _PageDots(count: widget.works.length, index: _index),
-                    ],
                   ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-final class _GlassIconButton extends StatelessWidget {
-  const _GlassIconButton({required this.icon, required this.onPressed});
-
-  final IconData icon;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(1000),
-      child: Material(
-        color: Colors.white.withValues(alpha: 0.08),
-        child: InkWell(
-          onTap: onPressed,
-          child: SizedBox(
-            width: 44,
-            height: 44,
-            child: Icon(icon, color: Colors.white.withValues(alpha: 0.9)),
+                  SizedBox(
+                    height: infoHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Column(
+                        children: [
+                          const Text(
+                            '今期の話題',
+                            style: AppTextStyles.callOutRegular,
+                          ),
+                          const SizedBox(height: 8),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  work.title,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  overflow: TextOverflow.clip,
+                                  style: AppTextStyles.largeTitleEmphasized,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _PrimaryPillButton(
+                                label: '見たい',
+                                icon: Icons.add,
+                                onPressed: () {},
+                              ),
+                              const SizedBox(width: 12),
+                              _GlassCircleButton(
+                                icon: Icons.more_horiz,
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12 + 44),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
-        ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 12,
+            child: SizedBox(
+              width: double.infinity,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onHorizontalDragStart: (_) {},
+                onHorizontalDragUpdate: (_) {},
+                onHorizontalDragEnd: (_) {},
+                child: _PageDots(count: widget.works.length, index: _index),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -484,26 +499,24 @@ final class _PrimaryPillButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(1000),
-      child: Material(
-        color: const Color(0xFF0091FF),
-        child: InkWell(
-          onTap: onPressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, color: Colors.white, size: 18),
-                const SizedBox(width: 6),
-                Text(
-                  label,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+      child: AdaptiveButton.child(
+        onPressed: onPressed,
+        color: const Color(0xFF6200EE),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 18),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -521,15 +534,13 @@ final class _GlassCircleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(500),
-      child: Material(
+      child: AdaptiveButton.child(
+        onPressed: onPressed,
         color: const Color(0xFF767680).withValues(alpha: 0.24),
-        child: InkWell(
-          onTap: onPressed,
-          child: const SizedBox(
-            width: 50,
-            height: 50,
-            child: Icon(Icons.more_horiz, color: Colors.white),
-          ),
+        child: SizedBox(
+          width: 50,
+          height: 50,
+          child: Icon(icon, color: Colors.white),
         ),
       ),
     );
@@ -588,13 +599,15 @@ final class _SectionTitleRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                textAlign: TextAlign.left,
+                style: AppTextStyles.title2Emphasized,
               ),
             ),
           ),
@@ -602,7 +615,10 @@ final class _SectionTitleRow extends StatelessWidget {
             data: IconThemeData(
               color: Colors.white.withValues(alpha: 0.6),
             ),
-            child: trailing,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: trailing,
+            ),
           ),
         ],
       ),
@@ -620,20 +636,25 @@ final class _SeasonHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                textAlign: TextAlign.left,
+                style: AppTextStyles.title2Emphasized,
+              ),
             ),
           ),
-          const SizedBox(width: 8),
-          Icon(
-            Icons.chevron_right,
-            size: 18,
-            color: Colors.white.withValues(alpha: 0.6),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: Colors.white.withValues(alpha: 0.6),
+            ),
           ),
         ],
       ),
@@ -701,10 +722,8 @@ final class _PosterItem extends StatelessWidget {
             work.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: const Color(0xFFF9FAFC),
-            ),
+            textAlign: TextAlign.left,
+            style: AppTextStyles.caption1Regular,
           ),
         ],
       ),
