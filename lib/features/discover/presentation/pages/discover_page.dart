@@ -1,6 +1,7 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:anipick/core/error/ui_error.dart';
+import 'package:anipick/core/theme/app_colors.dart';
 import 'package:anipick/core/theme/app_text_styles.dart';
 import 'package:anipick/features/discover/domain/entities/work.dart';
 import 'package:anipick/features/discover/presentation/controllers/discover_controller.dart';
@@ -86,6 +87,8 @@ final class _DiscoverBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     final topWorks = state.recommended.isNotEmpty
         ? state.recommended
         : state.currentTrending;
@@ -121,7 +124,7 @@ final class _DiscoverBody extends StatelessWidget {
     };
 
     return ColoredBox(
-      color: const Color(0xFF252032),
+      color: scaffoldBackgroundColor,
       child: Stack(
         children: [
           if (isCupertinoRefresh)
@@ -292,6 +295,8 @@ final class _TopHeroCarouselState extends State<_TopHeroCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     final works = widget.works;
     final heroHeight = MediaQuery.sizeOf(context).width * 9 / 16;
     const infoHeight = 220.0;
@@ -336,18 +341,18 @@ final class _TopHeroCarouselState extends State<_TopHeroCarousel> {
                                   fit: BoxFit.cover,
                                   loadingBuilder: (context, child, progress) {
                                     if (progress == null) return child;
-                                    return const ColoredBox(
-                                      color: Color(0xFF252032),
+                                    return ColoredBox(
+                                      color: scaffoldBackgroundColor,
                                     );
                                   },
                                   errorBuilder: (context, error, stackTrace) {
-                                    return const ColoredBox(
-                                      color: Color(0xFF252032),
+                                    return ColoredBox(
+                                      color: scaffoldBackgroundColor,
                                     );
                                   },
                                 )
                               else
-                                const ColoredBox(color: Color(0xFF252032)),
+                                ColoredBox(color: scaffoldBackgroundColor),
                               Positioned(
                                 left: 0,
                                 top: 0,
@@ -359,10 +364,10 @@ final class _TopHeroCarouselState extends State<_TopHeroCarousel> {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [
-                                        const Color(0xFF252032),
-                                        const Color(
-                                          0xFF010618,
-                                        ).withValues(alpha: 0),
+                                        scaffoldBackgroundColor,
+                                        scaffoldBackgroundColor.withValues(
+                                          alpha: 0,
+                                        ),
                                       ],
                                       stops: const [0.1, 1],
                                     ),
@@ -380,10 +385,10 @@ final class _TopHeroCarouselState extends State<_TopHeroCarousel> {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [
-                                        const Color(
-                                          0xFF252032,
-                                        ).withValues(alpha: 0),
-                                        const Color(0xFF252032),
+                                        scaffoldBackgroundColor.withValues(
+                                          alpha: 0,
+                                        ),
+                                        scaffoldBackgroundColor,
                                       ],
                                       stops: const [0, 0.9],
                                     ),
@@ -484,11 +489,12 @@ final class _PrimaryPillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ClipRRect(
       borderRadius: BorderRadius.circular(1000),
       child: AdaptiveButton.child(
         onPressed: onPressed,
-        color: const Color(0xFF6200EE),
+        color: colorScheme.primary,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -519,11 +525,12 @@ final class _GlassCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ClipRRect(
       borderRadius: BorderRadius.circular(500),
       child: AdaptiveButton.child(
         onPressed: onPressed,
-        color: const Color(0xFF767680).withValues(alpha: 0.24),
+        color: colorScheme.onSurface.withValues(alpha: 0.24),
         child: SizedBox(
           width: 50,
           height: 50,
@@ -695,13 +702,13 @@ final class _PosterItem extends StatelessWidget {
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, progress) {
                         if (progress == null) return child;
-                        return const ColoredBox(color: Color(0xFF3A3548));
+                        return const ColoredBox(color: AppColors.accent_700);
                       },
                       errorBuilder: (context, error, stackTrace) {
-                        return const ColoredBox(color: Color(0xFF3A3548));
+                        return const ColoredBox(color: AppColors.accent_700);
                       },
                     )
-                  : const ColoredBox(color: Color(0xFF3A3548)),
+                  : const ColoredBox(color: AppColors.accent_700),
             ),
           ),
           const SizedBox(height: 4),
