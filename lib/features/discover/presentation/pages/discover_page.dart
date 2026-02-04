@@ -1,6 +1,5 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/auth/auth_session_controller.dart';
-import 'package:anipick/core/error/failure.dart';
 import 'package:anipick/core/error/ui_error.dart';
 import 'package:anipick/core/theme/app_text_styles.dart';
 import 'package:anipick/features/discover/domain/entities/work.dart';
@@ -43,7 +42,9 @@ final class DiscoverPage extends ConsumerWidget {
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) {
-          final uiError = _mapErrorToUiError(e);
+          final uiError = e is UiError
+              ? e
+              : const UiError(message: '予期しないエラーが発生しました');
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -68,20 +69,6 @@ final class DiscoverPage extends ConsumerWidget {
       ),
     );
   }
-}
-
-UiError _mapErrorToUiError(Object error) {
-  final failure = switch (error) {
-    DiscoverException(failure: final failure) => failure,
-    Failure() => error,
-    _ => const UnexpectedFailure(),
-  };
-
-  return switch (failure) {
-    NetworkFailure() => const UiError(message: '通信に失敗しました'),
-    UnauthorizedFailure() => const UiError(message: '認証に失敗しました'),
-    UnexpectedFailure() => const UiError(message: '予期しないエラーが発生しました'),
-  };
 }
 
 final class _DiscoverBody extends StatelessWidget {

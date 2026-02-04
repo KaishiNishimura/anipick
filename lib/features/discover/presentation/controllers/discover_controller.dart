@@ -1,17 +1,9 @@
 import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:anipick/core/error/failure.dart';
+import 'package:anipick/core/error/ui_error.dart';
 import 'package:anipick/features/discover/di/providers.dart';
 import 'package:anipick/features/discover/presentation/states/discover_ui_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// Discoverで発生した失敗をラップする例外
-final class DiscoverException implements Exception {
-  /// 例外を作成
-  const DiscoverException(this.failure);
-
-  /// 失敗要因を保持
-  final Failure failure;
-}
 
 /// Discover画面Controllerを提供
 final AsyncNotifierProvider<DiscoverController, DiscoverUiState>
@@ -27,7 +19,7 @@ final class DiscoverController extends AsyncNotifier<DiscoverUiState> {
     final auth = await ref.watch(authSessionControllerProvider.future);
     final token = auth.accessToken?.value;
     if (token == null || token.isEmpty) {
-      throw const DiscoverException(UnauthorizedFailure());
+      throw _mapFailureToUiError(const UnauthorizedFailure());
     }
 
     final currentSeason = _currentSeasonName(DateTime.now());
@@ -40,7 +32,7 @@ final class DiscoverController extends AsyncNotifier<DiscoverUiState> {
     );
 
     if (currentFailure != null || currentWorks == null) {
-      throw DiscoverException(currentFailure ?? const UnexpectedFailure());
+      throw _mapFailureToUiError(currentFailure ?? const UnexpectedFailure());
     }
 
     final recommended = currentWorks.take(5).toList();
@@ -83,6 +75,14 @@ final class DiscoverController extends AsyncNotifier<DiscoverUiState> {
       currentTrending: currentTrending,
       previousSeasonTrending: previousSeasonTrending,
     );
+  }
+
+  UiError _mapFailureToUiError(Failure failure) {
+    return switch (failure) {
+      NetworkFailure() => const UiError(message: '通信に失敗しました'),
+      UnauthorizedFailure() => const UiError(message: '認証に失敗しました'),
+      UnexpectedFailure() => const UiError(message: '予期しないエラーが発生しました'),
+    };
   }
 
   /// リロード
