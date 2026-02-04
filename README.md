@@ -15,7 +15,9 @@ iOS/Android 向けの Annict クライアント（Flutter）。
 ## 画面収録
 
 https://github.com/user-attachments/assets/2a18280b-ab78-4dcf-bd87-8a4e74570d71
+
 https://github.com/user-attachments/assets/dd7d52a7-3d20-4537-b3bf-664d14876203
+
 https://github.com/user-attachments/assets/6434f684-b756-4c55-8cba-f6f1a39ea436
 
 ---
