@@ -77,7 +77,7 @@ fvm dart run build_runner build -d
 エントリポイント：
 
 - `lib/main.dart`
-  - `authSessionControllerProvider` の状態に応じて初期画面（`HomePage` / `LoginPage`）を切り替えます
+  - `authSessionControllerProvider` の状態に応じて初期画面（`DiscoverPage` / `LoginPage`）を切り替えます
 
 ---
 
