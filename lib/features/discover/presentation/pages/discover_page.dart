@@ -7,7 +7,6 @@ import 'package:anipick/features/discover/domain/entities/work.dart';
 import 'package:anipick/features/discover/presentation/controllers/discover_controller.dart';
 import 'package:anipick/features/discover/presentation/states/discover_ui_state.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -118,113 +117,86 @@ final class _DiscoverBody extends StatelessWidget {
       ],
     ];
 
-    final isCupertinoRefresh = switch (defaultTargetPlatform) {
-      TargetPlatform.iOS || TargetPlatform.macOS => true,
-      _ => false,
-    };
-
     return ColoredBox(
       color: scaffoldBackgroundColor,
       child: Stack(
         children: [
-          if (isCupertinoRefresh)
-            CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                CupertinoSliverRefreshControl(
-                  refreshTriggerPullDistance: 120,
-                  refreshIndicatorExtent: 72,
-                  builder:
-                      (
-                        context,
-                        refreshState,
-                        pulledExtent,
-                        refreshTriggerPullDistance,
+          CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              CupertinoSliverRefreshControl(
+                refreshTriggerPullDistance: 120,
+                refreshIndicatorExtent: 72,
+                builder:
+                    (
+                      context,
+                      refreshState,
+                      pulledExtent,
+                      refreshTriggerPullDistance,
+                      refreshIndicatorExtent,
+                    ) {
+                      final safePulledExtent = pulledExtent.clamp(
+                        0.0,
                         refreshIndicatorExtent,
-                      ) {
-                        final safePulledExtent = pulledExtent.clamp(
-                          0.0,
-                          refreshIndicatorExtent,
-                        );
+                      );
 
-                        final opacity =
-                            (safePulledExtent / refreshIndicatorExtent).clamp(
-                              0.0,
-                              1.0,
-                            );
+                      final opacity =
+                          (safePulledExtent / refreshIndicatorExtent).clamp(
+                            0.0,
+                            1.0,
+                          );
 
-                        final child = switch (refreshState) {
-                          RefreshIndicatorMode.refresh ||
-                          RefreshIndicatorMode.armed =>
-                            const CupertinoActivityIndicator(
-                              radius: 12,
-                            ),
-                          RefreshIndicatorMode.drag =>
-                            CupertinoActivityIndicator.partiallyRevealed(
-                              radius: 12,
-                              progress:
-                                  (pulledExtent / refreshTriggerPullDistance)
-                                      .clamp(0.0, 1.0),
-                            ),
-                          _ => const SizedBox.shrink(),
-                        };
+                      final child = switch (refreshState) {
+                        RefreshIndicatorMode.refresh ||
+                        RefreshIndicatorMode.armed =>
+                          const CupertinoActivityIndicator(
+                            radius: 12,
+                          ),
+                        RefreshIndicatorMode.drag =>
+                          CupertinoActivityIndicator.partiallyRevealed(
+                            radius: 12,
+                            progress:
+                                (pulledExtent / refreshTriggerPullDistance)
+                                    .clamp(0.0, 1.0),
+                          ),
+                        _ => const SizedBox.shrink(),
+                      };
 
-                        return Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            height: safePulledExtent,
-                            child: Center(
-                              child: Opacity(
-                                opacity: opacity,
-                                child: child,
-                              ),
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: SizedBox(
+                          height: safePulledExtent,
+                          child: Center(
+                            child: Opacity(
+                              opacity: opacity,
+                              child: child,
                             ),
                           ),
-                        );
-                      },
-                  onRefresh: () async {
-                    final reload = onReload;
-                    if (reload == null) return;
-                    await Future.wait([
-                      reload(),
-                      Future<void>.delayed(
-                        const Duration(milliseconds: 800),
-                      ),
-                    ]);
-                  },
-                ),
-                SliverPadding(
-                  padding: EdgeInsets.only(
-                    top: navigationTopPadding,
-                    bottom: 24,
-                  ),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate(contentChildren),
-                  ),
-                ),
-              ],
-            )
-          else
-            RefreshIndicator(
-              onRefresh: () async {
-                final reload = onReload;
-                if (reload == null) return;
-                await Future.wait([
-                  reload(),
-                  Future<void>.delayed(
-                    const Duration(milliseconds: 800),
-                  ),
-                ]);
-              },
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
+                        ),
+                      );
+                    },
+                onRefresh: () async {
+                  final reload = onReload;
+                  if (reload == null) return;
+                  await Future.wait([
+                    reload(),
+                    Future<void>.delayed(
+                      const Duration(milliseconds: 800),
+                    ),
+                  ]);
+                },
+              ),
+              SliverPadding(
                 padding: EdgeInsets.only(
                   top: navigationTopPadding,
                   bottom: 24,
                 ),
-                children: contentChildren,
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate(contentChildren),
+                ),
               ),
-            ),
+            ],
+          ),
           SafeArea(
             child: Align(
               alignment: Alignment.topRight,
@@ -525,16 +497,15 @@ final class _GlassCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return ClipRRect(
       borderRadius: BorderRadius.circular(500),
       child: AdaptiveButton.child(
         onPressed: onPressed,
-        color: colorScheme.onSurface.withValues(alpha: 0.24),
+        color: AppColors.accent_300,
         child: SizedBox(
           width: 50,
           height: 50,
-          child: Icon(icon, color: Colors.white),
+          child: Icon(icon, color: AppColors.accent_700),
         ),
       ),
     );
