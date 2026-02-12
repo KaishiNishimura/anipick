@@ -6,9 +6,9 @@
 
 ## 目的（この例で分かること）
 
-- **presentation → domain ← data** の依存方向を、実コードのファイルパスで確認できる
-- Riverpod（Generator含む）で **DI配線 → Controller → UI** をどう繋ぐかが分かる
-- 「横断状態（セッション）」を **core** に置くときの使い方が分かる
+- **UI/provider → domain/data** の依存方向を、実コードのファイルパスで確認できる
+- Riverpod（Generator含む）で **DataSource/Repository/UseCase/Controller → UI** をどう繋ぐかが分かる
+- 「横断状態（セッション）」を `features/auth/provider` に置くときの使い方が分かる
 
 ---
 
@@ -34,50 +34,51 @@
 - **Repository implementation**
   - `lib/features/auth/data/repositories/auth_repository_impl.dart`
 
-### Presentation（UI）
+### UI（views）
 
-- **UI State**
-  - `lib/features/auth/presentation/states/auth_ui_state.dart`
-- **Controller（画面or機能の状態管理）**
-  - `lib/features/auth/presentation/controllers/auth_controller.dart`
 - **Page**
-  - `lib/features/auth/presentation/pages/login_page.dart`
+  - `lib/views/ui/login/login_page.dart`
 
 ### 横断状態（認証セッション）
 
-- **AuthSessionController（coreに置く横断状態）**
-  - `lib/core/auth/auth_session_controller.dart`
+- **AuthController（横断状態）**
+  - `lib/features/auth/provider/auth_controller.dart`
 
 ---
 
 ## 依存方向の実例
 
-- presentation（`auth_controller.dart`, `login_page.dart`）は domain（UseCase）を呼ぶ
+- UI（`login_page.dart`）は provider（`auth_controller.dart`）を呼ぶ
+- provider（`auth_controller.dart`）は domain（UseCase）を呼ぶ
 - data（`auth_repository_impl.dart`）は domain（`AuthRepository`）を実装する
-- domain は presentation/data を import しない
+- domain は UI/provider を import しない
 
 ---
 
 ## DI（providers.dart）で「積み上げる」実例
 
-入口：`lib/features/auth/di/providers.dart`
+このプロジェクトでは Provider 定義は `@riverpod` を用いて **各実装ファイルで提供**する。
 
 - `authRemoteDataSourceProvider`
+  - 定義：`lib/features/auth/data/datasources/remote/auth_remote_datasource.dart`
   - 依存：`core/network/http_client_provider.dart`
 - `authLocalDataSourceProvider`
+  - 定義：`lib/features/auth/data/datasources/local/auth_local_datasource.dart`
   - 依存：`core/persistence/secure_storage_provider.dart`
 - `authRepositoryProvider`
+  - 定義：`lib/features/auth/data/repositories/auth_repository_impl.dart`
   - 依存：Remote + Local
 - `signInProvider` / `signOutProvider` / `getSavedAccessTokenProvider`
+  - 定義：`lib/features/auth/domain/usecases/*`
   - 依存：Repository
 
-このように **DataSource → Repository → UseCase** の順に provider を組み立てる。
+このように **DataSource → Repository → UseCase** の順に provider を積み上げ、横断状態（`AuthController`）や UI から利用する。
 
 ---
 
-## 横断状態（セッション）の扱い：AuthSessionController
+## 横断状態（セッション）の扱い：AuthController
 
-ファイル：`lib/core/auth/auth_session_controller.dart`
+ファイル：`lib/features/auth/provider/auth_controller.dart`
 
 ### 役割
 
@@ -86,10 +87,10 @@
 
 ### UIからの利用（正）
 
-- **参照**：`ref.watch(authSessionControllerProvider)`
-- **操作**：`ref.read(authSessionControllerProvider.notifier).signIn()` / `.signOut()`
+- **参照**：`ref.watch(authControllerProvider)`
+- **操作**：`ref.read(authControllerProvider.notifier).signIn()` / `.signOut()`
 
-> 「複数画面で共有される状態」は、feature配下のPage専用Controllerではなく、`core` の横断状態として扱う。
+> 「複数画面で共有される状態」は、Page専用Controllerではなく、feature配下の `provider/` に置いた横断状態として扱う。
 
 ---
 
@@ -98,10 +99,10 @@
 ### サインイン
 
 1. UI（`login_page.dart`）でボタン押下
-2. `AuthSessionController.signIn()` を呼ぶ
+2. `AuthController.signIn()` を呼ぶ
 3. Controller が `state = AsyncLoading()` にしてローディング開始
 4. `SignInUseCase` → `AuthRepositoryImpl.signIn()` → Remote(OAuth) + Local(永続化)
-5. 成功：`state = AsyncData(AuthSessionState(accessToken: token))`
+5. 成功：`state = AsyncData(AuthState(accessToken: token))`
 6. 失敗：`UiError` を返し、UI側で `AdaptiveSnackBar.show` 等を実行
 
 ---
@@ -115,7 +116,6 @@
 
 実例：
 
-- `AuthSessionController._mapFailureToUiError()`
 - `AuthController._mapFailureToUiError()`
 
 ---
@@ -124,6 +124,6 @@
 
 - **[Domain]** `entities/`, `repositories/`, `usecases/` を先に作る
 - **[Data]** `datasources/` と `repositories/*_impl.dart` を作る（domain interface を実装）
-- **[DI]** `features/<feature>/di/providers.dart` に DataSource→Repo→UseCase→Controller の順で provider を積む
-- **[Presentation]** `UiState` と `Controller` を作り、UIは `ref.watch` / `ref.listen` でつなぐ
-- **[横断状態]** 複数画面共有なら `core/` に AsyncNotifier を置く
+- **[DI]** `@riverpod` で DataSource→Repo→UseCase→Controller の順に provider を用意する
+- **[Presentation]** UI（`views/pages/*`）は `ref.watch` / `ref.listen` でつなぐ
+- **[横断状態]** 複数画面共有の状態は `features/<feature>/provider/` に AsyncNotifier を置く

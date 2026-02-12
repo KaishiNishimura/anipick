@@ -97,18 +97,18 @@ fvm dart run build_runner build -d
 エントリポイント：
 
 - `lib/main.dart`
-  - `authSessionControllerProvider` の状態に応じて初期画面（`DiscoverPage` / `LoginPage`）を切り替えます
+  - `authControllerProvider` の状態に応じて初期画面（`HomePage` / `LoginPage`）を切り替えます
 
 ---
 
 ## 認証（OAuth）の実装位置
 
-- 横断状態（セッション）：`lib/core/auth/auth_session_controller.dart`
+- 横断状態（セッション）：`lib/features/auth/provider/auth_controller.dart`
 - feature 実装：`lib/features/auth/`
-  - DI：`lib/features/auth/di/providers.dart`
   - Remote：`lib/features/auth/data/datasources/remote/auth_remote_datasource.dart`
   - Local：`lib/features/auth/data/datasources/local/auth_local_datasource.dart`
   - Repository：`lib/features/auth/data/repositories/auth_repository_impl.dart`
+  - UseCase：`lib/features/auth/domain/usecases/*`
 
 ---
 

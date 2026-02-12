@@ -13,24 +13,23 @@
 
 ---
 
-## 採用スタック（決定事項）
+## 採用スタック
 
 * 状態管理 / DI：**Riverpod**
 * Provider定義：**Riverpod Generator（`riverpod_annotation` + `riverpod_generator`）**
-* ViewModel相当：**`AutoDisposeAsyncNotifier` / `AutoDisposeNotifier`**
-* 層構造：**presentation / domain / data**
-* 依存方向：**presentation → domain ← data**（domain は外側を知らない）
+* 状態管理：**`@riverpod` で生成される Provider / Notifier を利用する**
+* 層構造：**UI（views） / domain / data**
+* 依存方向：**UI →（Controller/UseCase/Repository）→ data**（現状の実コードに合わせる）
 * UI基盤：**adaptive_platform_ui**（iOS/Androidでプラットフォームに応じた見た目を自動選択）
-* UIイベント（SnackBar / Navigation 等）：**Stateに混ぜず、UI側で `ref.listen` による副作用で処理**
+* UIイベント（SnackBar / Navigation 等）：**Stateに混ぜず、UI側で副作用で処理**
 * エラー設計：**domain は Failure、presentation は UiError**
 
 ---
 
 ## 画面・機能の基本方針（運用ルール）
 
-* 基本は **feature中心（画面ごとのAPI取得が多い）** とし、画面ごとに UseCase を呼び出してUIを組み立てる
-* 画面の状態は原則 **1 Page = 1 Controller**（その画面の入力・ロード状態・表示データを集約）
-* ただし **認証（セッション）など複数画面で共有される状態は「横断状態」**として扱い、特定のPageに閉じない
+* 状態は **Controller（Notifier）で管理**する
+* Controller は **機能（feature）単位**または **ページ単位**で作成してよい（現状：`HomeController` など）
 
 ---
 
@@ -52,31 +51,33 @@
 ### Platform差分を入れる場所
 
 * 基本は `adaptive_platform_ui` の自動判定に任せる
-* どうしても分岐が必要な場合のみ `PlatformInfo` を用いて UI層で分岐する
+* どうしても分岐が必要な場合のみ UI層で分岐する
 * domain/data 層には platform 分岐を持ち込まない
 
 ---
 
-## 全体の考え方（最重要）
+## 全体の考え方
 
 ### 1) 層の責務
 
-* **presentation**：Widget / 画面状態（UiState）/ 画面操作（Controller）
+* **UI（views）**：Widget（画面/部品）
+* **provider（Controller）**：状態管理・画面操作（`@riverpod` で生成される Notifier）
 * **domain**：アプリのルール（Entity, UseCase, Repository interface）
 * **data**：外部I/O（API, DB, DTO, Mapper, Repository実装）
 
 ### 2) 依存方向ルール
 
-* presentation は domain を呼ぶ（UseCase）
+* UI（views）は provider（Controller）を呼ぶ（`ref.watch` / `ref.read`）
+* provider（Controller）は domain の UseCase を呼ぶ
 * data は domain の Repository interface を実装する
-* domain は data/presentation を **一切 import しない**
+* Provider（DI配線）の都合で、domain 側の `@riverpod` provider が data 側の provider を import することがある（現状の実装に合わせる）
 
-> “内側（domain）が最強で、外側（presentation/data）が従う”
+> “内側（domain）が最強で、外側（UI/provider/data）が従う”
 > これが崩れると、拡張時に破滅します。
 
 ---
 
-## ディレクトリ構成（決定）
+## ディレクトリ構成
 
 ```text
 lib/
@@ -84,19 +85,10 @@ lib/
     env/
     error/
     network/
-    persistence/
-    ui/
-      widgets/
-    utils/
+    theme/
   features/
     <feature>/
-      di/
-        providers.dart
-      presentation/
-        pages/
-        widgets/
-        controllers/
-        states/
+      provider/
       domain/
         entities/
         usecases/
@@ -106,35 +98,31 @@ lib/
           remote/
           local/
         dtos/
-        mappers/
         repositories/
+  views/
+    pages/
+      <page>/
+    ui/
+      <ui>/
 ```
 
-### UI（Page/Widget）配置ルール（決定）
+### UI（Page/Widget）配置ルール
 
 * **Page**：**Routeのエントリ**（画面単位）
-* `features/<feature>/presentation/pages/<page>/widgets/` は **page専用部品**とし、**同ページ以外からの import を禁止**する
+* `views/pages/<page>/widgets/` は **page専用部品**とし、**同ページ以外からの import を禁止**する
 * 同じUIを **2回使ったら昇格**させる
-  * feature内で複数ページから使う → `features/<feature>/presentation/widgets/`
+  * 複数ページから使う → `views/ui/` 配下で共通化
   * アプリ全体で使う → `core/ui/widgets/`
 * “たぶん使うかも” を理由に昇格しない
 * `core/ui/widgets/`（アプリ共通UI）には **Provider/State を生やさない**（原則pureにして引数で受け取る）
 
-### Provider（DI）配置ルール（決定）
+### Provider（DI）配置ルール
 
-* feature内の依存関係（Repository実装 / DataSource / UseCase / Controller Provider）は、原則として **`features/<feature>/di/` 配下に集約**する
-* Controller本体は `presentation/controllers/` に置き、**DI配線（Provider定義）とは分離**する
+* feature内の依存関係（Repository実装 / DataSource / UseCase / Controller Provider）は、原則として **`features/<feature>/` 配下に閉じる**
+* Provider定義は `@riverpod` を用いて **各実装ファイルで提供**する（例：DataSource/Repository/UseCase/Controller のファイル内）
+* Controller は `features/<feature>/provider/` に置く
 * `core` の基盤Provider（HTTPクライアント、Storage等）は `core/` に置く
-* Providerは **feature外へ漏らさない**（`core` / `app` 相当の横断状態を除く）
-
-#### 横断状態（認証/セッション等）の例外ルール（決定）
-
-* 認証状態のように **複数画面で参照・更新される状態**は、単一featureの画面に閉じず「横断状態」として扱う
-* 横断状態のProviderは **`core/`（または `app/` 相当）**に配置してよい
-* 横断状態を扱う feature（例：`features/auth`）は
-  * UseCase / Repository / DataSource などの実装を持つ（featureとして完結）
-  * 横断状態Providerから利用されることを前提にしてよい
-* UI（page）は原則として **横断状態Providerを watch**し、画面遷移や表示分岐に利用する
+* Controller/Provider は **複数画面から参照される前提**のため、必要に応じて feature を跨いで参照してよい
 
 ### 命名ルール
 
@@ -153,31 +141,21 @@ lib/
 
 ---
 
-## Riverpod 設計（決定）
+## Riverpod 設計
 
 ### Controller の使い分け
 
-#### 画面の状態（非同期あり）
+#### 実装方針
 
-* **`AutoDisposeAsyncNotifier<XxxUiState>`**
-* 初期ロードは `build()` に書く（初回に自動で走る）
-
-#### 横断状態（認証/セッション等）
-
-* 複数ページで共有する状態は「Page専用Controller」とは別に扱う
-* Providerは **`core/`（または `app/`）**に置き、どのfeature/pageからも参照できる入口にする
-* UIの都合で保持したい場合でも、原則として **画面寿命に依存しない設計**にする
-
-#### 軽量ローカル状態（同期のみ）
-
-* **`AutoDisposeNotifier<XxxUiState>`**
-* タブ選択、フィルタ、入力中の値など
+* Controller は `@riverpod` を付けた class（`extends _$XxxController`）として実装する
+* `build()` の戻り値に応じて Generator が Notifier の型を決める
+  * `Future<T>` を返す場合は非同期（`AsyncValue<T>`）として扱う
+  * `T` を返す場合は同期として扱う
+* 状態は **複数画面から共有される前提**で設計する
 
 ### AutoDispose 方針
 
-* **基本は autoDispose**
-* “状態を保持したい” は Controller で頑張らず、**Repository側でキャッシュ**する
-  （画面寿命に状態保持を依存させない）
+* `autoDispose` を使うかどうかは **Providerごとに判断**する
 
 ## State 設計（決定）
 
@@ -199,7 +177,8 @@ lib/
 ### 方針
 
 * SnackBar、Dialog、画面遷移などの“一回だけやりたいこと”は **Stateに混ぜない**
-* UI側で `ref.listen` し、差分を検知して副作用を実行する
+* UI側で副作用を実行する
+  * 現状の実装：Controller メソッドが `UiError?` を返し、UIで受けて `AdaptiveSnackBar.show` する
 
 ## Error 設計（決定）
 
@@ -211,19 +190,19 @@ lib/
 ### presentation：UiError
 
 * ユーザーに見せる文言、再試行可否、アクション（ログイン誘導等）を持つ
-* `Failure -> UiError` 変換は presentation（Controller）で行う
+* `Failure -> UiError` 変換は provider（Controller）で行う
 
 ---
 
-## 依存注入（DI）方針（決定）
+## 依存注入（DI）方針
 
 * Riverpod を DI コンテナとして使う
 * `core` で基盤（Dio/DB/env）を提供し、feature内で積み上げる
-* Providerは **feature外へ漏らさない**（`core` / `app` 相当の横断状態を除く）
+* Controller/Provider は **複数画面から参照される前提**のため、必要に応じて feature を跨いで参照してよい
 
 ---
 
-## Riverpod Generator 運用（決定）
+## Riverpod Generator 運用
 
 * Provider定義は `@riverpod` を用いて記述し、`*.g.dart` は自動生成する
 * 生成コードは手で編集しない
