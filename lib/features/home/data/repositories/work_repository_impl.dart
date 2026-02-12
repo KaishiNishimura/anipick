@@ -1,8 +1,8 @@
 import 'package:anipick/core/error/failure.dart';
-import 'package:anipick/features/discover/data/datasources/remote/work_remote_datasource.dart';
-import 'package:anipick/features/discover/data/dtos/work_dto.dart';
-import 'package:anipick/features/discover/domain/entities/work.dart';
-import 'package:anipick/features/discover/domain/repositories/work_repository.dart';
+import 'package:anipick/features/home/data/datasources/remote/work_remote_datasource.dart';
+import 'package:anipick/features/home/data/dtos/work_dto.dart';
+import 'package:anipick/features/home/domain/entities/work.dart';
+import 'package:anipick/features/home/domain/repositories/work_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'work_repository_impl.g.dart';

@@ -1,9 +1,9 @@
-import 'package:anipick/features/discover/domain/entities/work.dart';
+import 'package:anipick/features/home/domain/entities/work.dart';
 
-/// Discover画面のUI状態
-final class DiscoverUiState {
+/// Home画面のUI状態
+final class HomeUiState {
   /// UI状態を作成
-  const DiscoverUiState({
+  const HomeUiState({
     required this.currentSeason,
     required this.currentSeasonText,
     required this.recommended,

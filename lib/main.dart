@@ -1,7 +1,7 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/theme/app_theme.dart';
 import 'package:anipick/features/auth/provider/auth_controller.dart';
-import 'package:anipick/views/pages/home/discover_page.dart';
+import 'package:anipick/views/pages/home/home_page.dart';
 import 'package:anipick/views/pages/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,8 +42,7 @@ final class AppRootPage extends ConsumerWidget {
     final auth = ref.watch(authControllerProvider);
 
     return auth.when(
-      data: (state) =>
-          state.isSignedIn ? const DiscoverPage() : const LoginPage(),
+      data: (state) => state.isSignedIn ? const HomePage() : const LoginPage(),
       loading: () => const AdaptiveScaffold(body: SizedBox.shrink()),
       error: (_, _) => const AdaptiveScaffold(
         body: Center(child: Text('起動に失敗しました')),

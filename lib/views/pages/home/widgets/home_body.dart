@@ -1,14 +1,14 @@
-part of '../discover_page.dart';
+part of '../home_page.dart';
 
-final class _DiscoverBody extends StatelessWidget {
-  const _DiscoverBody({
+final class _HomeBody extends StatelessWidget {
+  const _HomeBody({
     required this.state,
     required this.onReload,
     required this.onSignOut,
     required this.isAuthLoading,
   });
 
-  final DiscoverUiState state;
+  final HomeUiState state;
   final Future<void> Function()? onReload;
   final Future<void> Function()? onSignOut;
   final bool isAuthLoading;

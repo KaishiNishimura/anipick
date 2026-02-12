@@ -1,4 +1,4 @@
-part of '../discover_page.dart';
+part of '../home_page.dart';
 
 final class _PageDots extends StatelessWidget {
   const _PageDots({required this.count, required this.index});

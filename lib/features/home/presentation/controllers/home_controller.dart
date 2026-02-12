@@ -1,17 +1,17 @@
 import 'package:anipick/core/error/failure.dart';
 import 'package:anipick/core/error/ui_error.dart';
 import 'package:anipick/features/auth/provider/auth_controller.dart';
-import 'package:anipick/features/discover/domain/usecases/get_season_works.dart';
-import 'package:anipick/features/discover/presentation/states/discover_ui_state.dart';
+import 'package:anipick/features/home/domain/usecases/get_season_works.dart';
+import 'package:anipick/features/home/presentation/states/home_ui_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'discover_controller.g.dart';
+part 'home_controller.g.dart';
 
-/// Discover画面の状態を管理
+/// Home画面の状態を管理
 @riverpod
-final class DiscoverController extends _$DiscoverController {
+final class HomeController extends _$HomeController {
   @override
-  Future<DiscoverUiState> build() async {
+  Future<HomeUiState> build() async {
     final auth = await ref.watch(authControllerProvider.future);
     final token = auth.accessToken?.value;
     if (token == null || token.isEmpty) {
@@ -65,7 +65,7 @@ final class DiscoverController extends _$DiscoverController {
         ? currentSeason
         : currentWorks.first.seasonNameText;
 
-    return DiscoverUiState(
+    return HomeUiState(
       currentSeason: currentSeason,
       currentSeasonText: currentSeasonText,
       recommended: recommended,
@@ -84,7 +84,7 @@ final class DiscoverController extends _$DiscoverController {
 
   /// リロード
   Future<void> reload() async {
-    state = const AsyncLoading<DiscoverUiState>();
+    state = const AsyncLoading<HomeUiState>();
     state = await AsyncValue.guard(build);
   }
 

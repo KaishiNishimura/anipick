@@ -1,4 +1,4 @@
-import 'package:anipick/features/discover/domain/entities/work.dart';
+import 'package:anipick/features/home/domain/entities/work.dart';
 
 /// 作品DTO
 final class WorkDto {

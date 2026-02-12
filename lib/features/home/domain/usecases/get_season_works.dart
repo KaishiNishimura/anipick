@@ -1,7 +1,7 @@
 import 'package:anipick/core/error/failure.dart';
-import 'package:anipick/features/discover/data/repositories/work_repository_impl.dart';
-import 'package:anipick/features/discover/domain/entities/work.dart';
-import 'package:anipick/features/discover/domain/repositories/work_repository.dart';
+import 'package:anipick/features/home/data/repositories/work_repository_impl.dart';
+import 'package:anipick/features/home/domain/entities/work.dart';
+import 'package:anipick/features/home/domain/repositories/work_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'get_season_works.g.dart';

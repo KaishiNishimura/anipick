@@ -1,4 +1,4 @@
-part of '../discover_page.dart';
+part of '../home_page.dart';
 
 final class _SectionTitleRow extends StatelessWidget {
   const _SectionTitleRow({required this.title, required this.trailing});

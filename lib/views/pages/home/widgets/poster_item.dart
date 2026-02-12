@@ -1,4 +1,4 @@
-part of '../discover_page.dart';
+part of '../home_page.dart';
 
 final class _PosterItem extends StatelessWidget {
   const _PosterItem({required this.work});

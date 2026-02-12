@@ -1,5 +1,5 @@
 import 'package:anipick/core/error/failure.dart';
-import 'package:anipick/features/discover/domain/entities/work.dart';
+import 'package:anipick/features/home/domain/entities/work.dart';
 
 /// 作品情報を取得するリポジトリを定義
 abstract interface class WorkRepository {
