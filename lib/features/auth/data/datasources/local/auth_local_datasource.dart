@@ -1,4 +1,8 @@
+import 'package:anipick/core/persistence/secure_storage_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_local_datasource.g.dart';
 
 /// アクセストークンを安全領域へ永続化するローカルデータソース
 final class AuthLocalDataSource {
@@ -20,4 +24,11 @@ final class AuthLocalDataSource {
 
   /// 保存済みアクセストークンを削除
   Future<void> deleteAccessToken() => _storage.delete(key: _accessTokenKey);
+}
+
+/// 認証用ローカルデータソースを提供
+@riverpod
+AuthLocalDataSource authLocalDataSource(Ref ref) {
+  final storage = ref.watch(secureStorageProvider);
+  return AuthLocalDataSource(storage);
 }

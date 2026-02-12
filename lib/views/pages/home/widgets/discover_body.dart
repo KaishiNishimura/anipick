@@ -1,4 +1,4 @@
-part of '../../discover_page.dart';
+part of '../discover_page.dart';
 
 final class _DiscoverBody extends StatelessWidget {
   const _DiscoverBody({

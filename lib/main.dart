@@ -1,8 +1,8 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
-import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:anipick/core/theme/app_theme.dart';
-import 'package:anipick/features/auth/presentation/pages/login_page.dart';
-import 'package:anipick/features/discover/presentation/pages/discover_page.dart';
+import 'package:anipick/features/auth/provider/auth_controller.dart';
+import 'package:anipick/views/pages/home/discover_page.dart';
+import 'package:anipick/views/pages/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,7 +39,7 @@ final class AppRootPage extends ConsumerWidget {
   @override
   /// ウィジェットを構築
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authSessionControllerProvider);
+    final auth = ref.watch(authControllerProvider);
 
     return auth.when(
       data: (state) =>

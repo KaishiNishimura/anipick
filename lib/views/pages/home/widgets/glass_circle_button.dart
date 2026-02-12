@@ -1,4 +1,4 @@
-part of '../../discover_page.dart';
+part of '../discover_page.dart';
 
 final class _GlassCircleButton extends StatelessWidget {
   const _GlassCircleButton({required this.icon, required this.onPressed});

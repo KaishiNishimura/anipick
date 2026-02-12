@@ -1,4 +1,4 @@
-part of '../../discover_page.dart';
+part of '../discover_page.dart';
 
 final class _PrimaryPillButton extends StatelessWidget {
   const _PrimaryPillButton({

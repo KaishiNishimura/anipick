@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 import 'package:anipick/core/env/annict_env.dart';
+import 'package:anipick/core/network/http_client_provider.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:http/http.dart' as http;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_remote_datasource.g.dart';
 
 /// OAuth 認証を実行するリモートデータソースを定義
 final class AuthRemoteDataSource {
@@ -93,4 +97,11 @@ final class HttpException implements Exception {
 
   /// HTTP ステータスコードを保持
   final int statusCode;
+}
+
+/// 認証用リモートデータソースを提供
+@riverpod
+AuthRemoteDataSource authRemoteDataSource(Ref ref) {
+  final client = ref.watch(httpClientProvider);
+  return AuthRemoteDataSource(client);
 }

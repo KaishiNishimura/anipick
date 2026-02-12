@@ -1,19 +1,17 @@
 import 'package:anipick/core/error/failure.dart';
 import 'package:anipick/core/error/ui_error.dart';
-import 'package:anipick/features/auth/di/providers.dart';
 import 'package:anipick/features/auth/domain/entities/access_token.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:anipick/features/auth/domain/usecases/get_saved_access_token.dart';
+import 'package:anipick/features/auth/domain/usecases/sign_in.dart';
+import 'package:anipick/features/auth/domain/usecases/sign_out.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-/// 認証セッション（横断状態）を管理する Controller を提供
-final authSessionControllerProvider =
-    AsyncNotifierProvider<AuthSessionController, AuthSessionState>(
-      AuthSessionController.new,
-    );
+part 'auth_controller.g.dart';
 
 /// 横断状態として扱う認証セッションの状態
-final class AuthSessionState {
+final class AuthState {
   /// 認証セッションの状態を作成
-  const AuthSessionState({required this.accessToken});
+  const AuthState({required this.accessToken});
 
   /// サインイン済みの場合に保持するアクセストークン
   final AccessToken? accessToken;
@@ -23,30 +21,31 @@ final class AuthSessionState {
 }
 
 /// 認証セッション（横断状態）を管理する Controller
-final class AuthSessionController extends AsyncNotifier<AuthSessionState> {
+@riverpod
+final class AuthController extends _$AuthController {
   @override
   /// 認証セッションの初期状態を取得
-  Future<AuthSessionState> build() async {
+  Future<AuthState> build() async {
     final usecase = ref.read(getSavedAccessTokenProvider);
     final token = await usecase();
-    return AuthSessionState(accessToken: token);
+    return AuthState(accessToken: token);
   }
 
   /// サインインを実行
   Future<UiError?> signIn() async {
     final usecase = ref.read(signInProvider);
 
-    state = const AsyncLoading<AuthSessionState>();
+    state = const AsyncLoading<AuthState>();
 
     final (token, failure) = await usecase();
     if (failure != null) {
-      state = const AsyncData<AuthSessionState>(
-        AuthSessionState(accessToken: null),
+      state = const AsyncData<AuthState>(
+        AuthState(accessToken: null),
       );
       return _mapFailureToUiError(failure);
     }
 
-    state = AsyncData(AuthSessionState(accessToken: token));
+    state = AsyncData(AuthState(accessToken: token));
     return null;
   }
 
@@ -54,8 +53,8 @@ final class AuthSessionController extends AsyncNotifier<AuthSessionState> {
   Future<void> signOut() async {
     final usecase = ref.read(signOutProvider);
     await usecase();
-    state = const AsyncData<AuthSessionState>(
-      AuthSessionState(accessToken: null),
+    state = const AsyncData<AuthState>(
+      AuthState(accessToken: null),
     );
   }
 

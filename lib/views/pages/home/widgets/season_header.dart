@@ -1,4 +1,4 @@
-part of '../../discover_page.dart';
+part of '../discover_page.dart';
 
 final class _SeasonHeader extends StatelessWidget {
   const _SeasonHeader({required this.title});

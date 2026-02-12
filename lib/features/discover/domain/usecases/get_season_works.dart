@@ -1,6 +1,10 @@
 import 'package:anipick/core/error/failure.dart';
+import 'package:anipick/features/discover/data/repositories/work_repository_impl.dart';
 import 'package:anipick/features/discover/domain/entities/work.dart';
 import 'package:anipick/features/discover/domain/repositories/work_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'get_season_works.g.dart';
 
 /// シーズン作品一覧を取得するユースケースを定義
 final class GetSeasonWorksUseCase {
@@ -20,4 +24,11 @@ final class GetSeasonWorksUseCase {
     accessToken: accessToken,
     perPage: perPage,
   );
+}
+
+/// シーズン作品一覧取得ユースケースを提供
+@riverpod
+GetSeasonWorksUseCase getSeasonWorks(Ref ref) {
+  final repo = ref.watch(workRepositoryProvider);
+  return GetSeasonWorksUseCase(repo);
 }

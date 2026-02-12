@@ -1,4 +1,4 @@
-part of '../../discover_page.dart';
+part of '../discover_page.dart';
 
 final class _PosterRow extends StatelessWidget {
   const _PosterRow({required this.works});

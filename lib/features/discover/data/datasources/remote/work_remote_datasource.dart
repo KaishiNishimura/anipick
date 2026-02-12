@@ -1,6 +1,10 @@
 import 'dart:convert';
 
+import 'package:anipick/core/network/http_client_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'work_remote_datasource.g.dart';
 
 /// 作品情報を取得するリモートデータソースを定義
 final class WorkRemoteDataSource {
@@ -74,4 +78,11 @@ final class HttpException implements Exception {
 
   /// HTTP ステータスコードを保持
   final int statusCode;
+}
+
+/// 作品用リモートデータソースを提供
+@riverpod
+WorkRemoteDataSource workRemoteDataSource(Ref ref) {
+  final client = ref.watch(httpClientProvider);
+  return WorkRemoteDataSource(client);
 }

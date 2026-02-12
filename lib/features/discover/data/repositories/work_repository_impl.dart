@@ -3,6 +3,9 @@ import 'package:anipick/features/discover/data/datasources/remote/work_remote_da
 import 'package:anipick/features/discover/data/dtos/work_dto.dart';
 import 'package:anipick/features/discover/domain/entities/work.dart';
 import 'package:anipick/features/discover/domain/repositories/work_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'work_repository_impl.g.dart';
 
 /// 作品情報リポジトリの実装
 final class WorkRepositoryImpl implements WorkRepository {
@@ -86,4 +89,11 @@ final class WorkRepositoryImpl implements WorkRepository {
       return (null, const UnexpectedFailure());
     }
   }
+}
+
+/// 作品リポジトリを提供
+@riverpod
+WorkRepository workRepository(Ref ref) {
+  final remote = ref.watch(workRemoteDataSourceProvider);
+  return WorkRepositoryImpl(remote: remote);
 }

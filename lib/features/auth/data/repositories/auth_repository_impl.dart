@@ -4,6 +4,9 @@ import 'package:anipick/features/auth/data/datasources/local/auth_local_datasour
 import 'package:anipick/features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:anipick/features/auth/domain/entities/access_token.dart';
 import 'package:anipick/features/auth/domain/repositories/auth_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_repository_impl.g.dart';
 
 /// 認証リポジトリの実装
 final class AuthRepositoryImpl implements AuthRepository {
@@ -57,4 +60,12 @@ final class AuthRepositoryImpl implements AuthRepository {
   @override
   /// サインアウトして保存済みトークンを削除
   Future<void> signOut() => _local.deleteAccessToken();
+}
+
+/// 認証リポジトリを提供
+@riverpod
+AuthRepository authRepository(Ref ref) {
+  final remote = ref.watch(authRemoteDataSourceProvider);
+  final local = ref.watch(authLocalDataSourceProvider);
+  return AuthRepositoryImpl(remote: remote, local: local);
 }

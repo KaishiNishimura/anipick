@@ -1,22 +1,18 @@
-import 'package:anipick/core/auth/auth_session_controller.dart';
 import 'package:anipick/core/error/failure.dart';
 import 'package:anipick/core/error/ui_error.dart';
-import 'package:anipick/features/discover/di/providers.dart';
+import 'package:anipick/features/auth/provider/auth_controller.dart';
+import 'package:anipick/features/discover/domain/usecases/get_season_works.dart';
 import 'package:anipick/features/discover/presentation/states/discover_ui_state.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-/// Discover画面Controllerを提供
-final AsyncNotifierProvider<DiscoverController, DiscoverUiState>
-discoverControllerProvider =
-    AsyncNotifierProvider.autoDispose<DiscoverController, DiscoverUiState>(
-      DiscoverController.new,
-    );
+part 'discover_controller.g.dart';
 
 /// Discover画面の状態を管理
-final class DiscoverController extends AsyncNotifier<DiscoverUiState> {
+@riverpod
+final class DiscoverController extends _$DiscoverController {
   @override
   Future<DiscoverUiState> build() async {
-    final auth = await ref.watch(authSessionControllerProvider.future);
+    final auth = await ref.watch(authControllerProvider.future);
     final token = auth.accessToken?.value;
     if (token == null || token.isEmpty) {
       throw _mapFailureToUiError(const UnauthorizedFailure());

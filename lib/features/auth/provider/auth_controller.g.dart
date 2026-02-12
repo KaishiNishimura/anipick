@@ -8,15 +8,15 @@ part of 'auth_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 認証状態を管理
+/// 認証セッション（横断状態）を管理する Controller
 
 @ProviderFor(AuthController)
 final authControllerProvider = AuthControllerProvider._();
 
-/// 認証状態を管理
+/// 認証セッション（横断状態）を管理する Controller
 final class AuthControllerProvider
-    extends $AsyncNotifierProvider<AuthController, AuthUiState> {
-  /// 認証状態を管理
+    extends $AsyncNotifierProvider<AuthController, AuthState> {
+  /// 認証セッション（横断状態）を管理する Controller
   AuthControllerProvider._()
     : super(
         from: null,
@@ -36,21 +36,21 @@ final class AuthControllerProvider
   AuthController create() => AuthController();
 }
 
-String _$authControllerHash() => r'9b95283aa470c1862b43311a2c7cb43065d3331f';
+String _$authControllerHash() => r'5af1670138c0fb5af894668cdc12dd41e17f786e';
 
-/// 認証状態を管理
+/// 認証セッション（横断状態）を管理する Controller
 
-abstract class _$AuthController extends $AsyncNotifier<AuthUiState> {
-  FutureOr<AuthUiState> build();
+abstract class _$AuthController extends $AsyncNotifier<AuthState> {
+  FutureOr<AuthState> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<AuthUiState>, AuthUiState>;
+    final ref = this.ref as $Ref<AsyncValue<AuthState>, AuthState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<AuthUiState>, AuthUiState>,
-              AsyncValue<AuthUiState>,
+              AnyNotifier<AsyncValue<AuthState>, AuthState>,
+              AsyncValue<AuthState>,
               Object?,
               Object?
             >;
