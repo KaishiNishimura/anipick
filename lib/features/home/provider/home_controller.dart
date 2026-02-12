@@ -2,7 +2,7 @@ import 'package:anipick/core/error/failure.dart';
 import 'package:anipick/core/error/ui_error.dart';
 import 'package:anipick/features/auth/provider/auth_controller.dart';
 import 'package:anipick/features/home/domain/usecases/get_season_works.dart';
-import 'package:anipick/features/home/presentation/states/home_ui_state.dart';
+import 'package:anipick/views/pages/home/home_ui_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_controller.g.dart';
