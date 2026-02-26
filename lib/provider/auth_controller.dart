@@ -1,8 +1,5 @@
-import 'package:anipick/application/usecases/get_saved_access_token.dart';
-import 'package:anipick/application/usecases/sign_in.dart';
-import 'package:anipick/application/usecases/sign_out.dart';
-import 'package:anipick/core/error/failure.dart';
-import 'package:anipick/core/error/ui_error.dart';
+import 'package:anipick/application/usecases/auth/get_saved_access_token.dart';
+import 'package:anipick/application/usecases/auth/sign_out.dart';
 import 'package:anipick/domain/entities/access_token.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,7 +18,7 @@ final class AuthState {
 }
 
 /// 認証セッション（横断状態）を管理する Controller
-@riverpod
+@Riverpod(keepAlive: true)
 final class AuthController extends _$AuthController {
   @override
   /// 認証セッションの初期状態を取得
@@ -31,22 +28,9 @@ final class AuthController extends _$AuthController {
     return AuthState(accessToken: token);
   }
 
-  /// サインインを実行
-  Future<UiError?> signIn() async {
-    final usecase = ref.read(signInProvider);
-
-    state = const AsyncLoading<AuthState>();
-
-    final (token, failure) = await usecase();
-    if (failure != null) {
-      state = const AsyncData<AuthState>(
-        AuthState(accessToken: null),
-      );
-      return _mapFailureToUiError(failure);
-    }
-
-    state = AsyncData(AuthState(accessToken: token));
-    return null;
+  /// AccessTokenを更新
+  void updateAccessToken(AccessToken? token) {
+    state = AsyncData<AuthState>(AuthState(accessToken: token));
   }
 
   /// サインアウトを実行
@@ -56,17 +40,5 @@ final class AuthController extends _$AuthController {
     state = const AsyncData<AuthState>(
       AuthState(accessToken: null),
     );
-  }
-
-  UiError _mapFailureToUiError(Failure failure) {
-    return switch (failure) {
-      NetworkFailure() => const UiError(message: '通信に失敗しました'),
-      UnauthorizedFailure() => const UiError(
-        message: '認証に失敗しました',
-      ),
-      UnexpectedFailure() => const UiError(
-        message: '予期しないエラーが発生しました',
-      ),
-    };
   }
 }

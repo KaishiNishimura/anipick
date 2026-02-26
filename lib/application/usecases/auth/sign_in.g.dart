@@ -10,28 +10,28 @@ part of 'sign_in.dart';
 // ignore_for_file: type=lint, type=warning
 /// サインインユースケースを提供
 
-@ProviderFor(signIn)
-final signInProvider = SignInProvider._();
+@ProviderFor(signInUseCase)
+final signInUseCaseProvider = SignInUseCaseProvider._();
 
 /// サインインユースケースを提供
 
-final class SignInProvider
+final class SignInUseCaseProvider
     extends $FunctionalProvider<SignInUseCase, SignInUseCase, SignInUseCase>
     with $Provider<SignInUseCase> {
   /// サインインユースケースを提供
-  SignInProvider._()
+  SignInUseCaseProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'signInProvider',
+        name: r'signInUseCaseProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$signInHash();
+  String debugGetCreateSourceHash() => _$signInUseCaseHash();
 
   @$internal
   @override
@@ -40,7 +40,7 @@ final class SignInProvider
 
   @override
   SignInUseCase create(Ref ref) {
-    return signIn(ref);
+    return signInUseCase(ref);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -52,4 +52,4 @@ final class SignInProvider
   }
 }
 
-String _$signInHash() => r'f55db1b32d2d8d4fb7cce2ffc094d6b8a396fb68';
+String _$signInUseCaseHash() => r'162db56e7e73659d93aac6c539dffc1ba38d9029';

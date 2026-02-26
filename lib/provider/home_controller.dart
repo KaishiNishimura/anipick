@@ -1,4 +1,4 @@
-import 'package:anipick/application/usecases/get_season_works.dart';
+import 'package:anipick/application/usecases/home/get_season_works.dart';
 import 'package:anipick/core/error/failure.dart';
 import 'package:anipick/core/error/ui_error.dart';
 import 'package:anipick/presentation/pages/home/home_ui_state.dart';

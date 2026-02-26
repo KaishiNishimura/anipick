@@ -23,7 +23,7 @@ final class AuthControllerProvider
         argument: null,
         retry: null,
         name: r'authControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -36,7 +36,7 @@ final class AuthControllerProvider
   AuthController create() => AuthController();
 }
 
-String _$authControllerHash() => r'5af1670138c0fb5af894668cdc12dd41e17f786e';
+String _$authControllerHash() => r'0ba6589582dc5bf32f624dfecb70c96463f581e2';
 
 /// 認証セッション（横断状態）を管理する Controller
 
