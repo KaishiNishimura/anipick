@@ -13,10 +13,10 @@ final class RefreshSeasonWorksUseCase {
 
   /// シーズン作品一覧を取得
   void call() {
-    final _ = ref.refresh(homeControllerProvider(0));
-    final _ = ref.refresh(homeControllerProvider(1));
-    final _ = ref.refresh(homeControllerProvider(2));
-    final _ = ref.refresh(homeControllerProvider(3));
+    final _ = ref.refresh(seasonWorksControllerProvider(0));
+    final _ = ref.refresh(seasonWorksControllerProvider(1));
+    final _ = ref.refresh(seasonWorksControllerProvider(2));
+    final _ = ref.refresh(seasonWorksControllerProvider(3));
   }
 }
 

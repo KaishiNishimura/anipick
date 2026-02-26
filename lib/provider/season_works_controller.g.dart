@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'home_controller.dart';
+part of 'season_works_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -10,41 +10,41 @@ part of 'home_controller.dart';
 // ignore_for_file: type=lint, type=warning
 /// Home画面の状態を管理
 
-@ProviderFor(HomeController)
-final homeControllerProvider = HomeControllerFamily._();
+@ProviderFor(SeasonWorksController)
+final seasonWorksControllerProvider = SeasonWorksControllerFamily._();
 
 /// Home画面の状態を管理
-final class HomeControllerProvider
-    extends $AsyncNotifierProvider<HomeController, SeasonWorks> {
+final class SeasonWorksControllerProvider
+    extends $AsyncNotifierProvider<SeasonWorksController, SeasonWorks> {
   /// Home画面の状態を管理
-  HomeControllerProvider._({
-    required HomeControllerFamily super.from,
+  SeasonWorksControllerProvider._({
+    required SeasonWorksControllerFamily super.from,
     required int super.argument,
   }) : super(
          retry: null,
-         name: r'homeControllerProvider',
+         name: r'seasonWorksControllerProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$homeControllerHash();
+  String debugGetCreateSourceHash() => _$seasonWorksControllerHash();
 
   @override
   String toString() {
-    return r'homeControllerProvider'
+    return r'seasonWorksControllerProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  HomeController create() => HomeController();
+  SeasonWorksController create() => SeasonWorksController();
 
   @override
   bool operator ==(Object other) {
-    return other is HomeControllerProvider && other.argument == argument;
+    return other is SeasonWorksControllerProvider && other.argument == argument;
   }
 
   @override
@@ -53,23 +53,24 @@ final class HomeControllerProvider
   }
 }
 
-String _$homeControllerHash() => r'ace05f3fd380e4ac4c29191641487604f8cc358e';
+String _$seasonWorksControllerHash() =>
+    r'f76dfe4ec1a963149b8e6c16940f36202cc54294';
 
 /// Home画面の状態を管理
 
-final class HomeControllerFamily extends $Family
+final class SeasonWorksControllerFamily extends $Family
     with
         $ClassFamilyOverride<
-          HomeController,
+          SeasonWorksController,
           AsyncValue<SeasonWorks>,
           SeasonWorks,
           FutureOr<SeasonWorks>,
           int
         > {
-  HomeControllerFamily._()
+  SeasonWorksControllerFamily._()
     : super(
         retry: null,
-        name: r'homeControllerProvider',
+        name: r'seasonWorksControllerProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
@@ -77,16 +78,16 @@ final class HomeControllerFamily extends $Family
 
   /// Home画面の状態を管理
 
-  HomeControllerProvider call(int back) =>
-      HomeControllerProvider._(argument: back, from: this);
+  SeasonWorksControllerProvider call(int back) =>
+      SeasonWorksControllerProvider._(argument: back, from: this);
 
   @override
-  String toString() => r'homeControllerProvider';
+  String toString() => r'seasonWorksControllerProvider';
 }
 
 /// Home画面の状態を管理
 
-abstract class _$HomeController extends $AsyncNotifier<SeasonWorks> {
+abstract class _$SeasonWorksController extends $AsyncNotifier<SeasonWorks> {
   late final _$args = ref.$arg as int;
   int get back => _$args;
 

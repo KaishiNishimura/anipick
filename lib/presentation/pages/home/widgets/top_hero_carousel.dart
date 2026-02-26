@@ -10,7 +10,7 @@ final class _TopHeroCarousel extends HookConsumerWidget {
     final heroHeight = MediaQuery.sizeOf(context).width * 9 / 16;
     const infoHeight = 220.0;
 
-    final home = ref.watch(homeControllerProvider(0));
+    final home = ref.watch(seasonWorksControllerProvider(0));
 
     return home.when(
       data: (state) => SizedBox(

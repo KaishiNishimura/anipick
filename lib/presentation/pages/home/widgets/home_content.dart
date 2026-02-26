@@ -3,11 +3,11 @@ part of '../home_page.dart';
 final class _HomeContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final current = ref.watch(homeControllerProvider(0));
+    final current = ref.watch(seasonWorksControllerProvider(0));
     final previousList = [
-      ref.watch(homeControllerProvider(1)),
-      ref.watch(homeControllerProvider(2)),
-      ref.watch(homeControllerProvider(3)),
+      ref.watch(seasonWorksControllerProvider(1)),
+      ref.watch(seasonWorksControllerProvider(2)),
+      ref.watch(seasonWorksControllerProvider(3)),
     ];
 
     return SliverList(
