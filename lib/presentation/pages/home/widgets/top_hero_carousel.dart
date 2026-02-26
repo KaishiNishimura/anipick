@@ -3,15 +3,9 @@ part of '../home_page.dart';
 final class _TopHeroCarousel extends StatefulWidget {
   const _TopHeroCarousel({
     required this.works,
-    required this.onReload,
-    required this.onSignOut,
-    required this.isAuthLoading,
   });
 
   final List<Work> works;
-  final Future<void> Function()? onReload;
-  final Future<void> Function()? onSignOut;
-  final bool isAuthLoading;
 
   @override
   State<_TopHeroCarousel> createState() => _TopHeroCarouselState();

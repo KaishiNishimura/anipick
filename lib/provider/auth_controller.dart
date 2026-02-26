@@ -1,5 +1,4 @@
 import 'package:anipick/application/usecases/auth/get_saved_access_token.dart';
-import 'package:anipick/application/usecases/auth/sign_out.dart';
 import 'package:anipick/domain/entities/access_token.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,14 +30,5 @@ final class AuthController extends _$AuthController {
   /// AccessTokenを更新
   void updateAccessToken(AccessToken? token) {
     state = AsyncData<AuthState>(AuthState(accessToken: token));
-  }
-
-  /// サインアウトを実行
-  Future<void> signOut() async {
-    final usecase = ref.read(signOutProvider);
-    await usecase();
-    state = const AsyncData<AuthState>(
-      AuthState(accessToken: null),
-    );
   }
 }

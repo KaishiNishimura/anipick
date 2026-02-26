@@ -10,28 +10,28 @@ part of 'sign_out.dart';
 // ignore_for_file: type=lint, type=warning
 /// サインアウトユースケースを提供
 
-@ProviderFor(signOut)
-final signOutProvider = SignOutProvider._();
+@ProviderFor(signOutUseCase)
+final signOutUseCaseProvider = SignOutUseCaseProvider._();
 
 /// サインアウトユースケースを提供
 
-final class SignOutProvider
+final class SignOutUseCaseProvider
     extends $FunctionalProvider<SignOutUseCase, SignOutUseCase, SignOutUseCase>
     with $Provider<SignOutUseCase> {
   /// サインアウトユースケースを提供
-  SignOutProvider._()
+  SignOutUseCaseProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'signOutProvider',
+        name: r'signOutUseCaseProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$signOutHash();
+  String debugGetCreateSourceHash() => _$signOutUseCaseHash();
 
   @$internal
   @override
@@ -40,7 +40,7 @@ final class SignOutProvider
 
   @override
   SignOutUseCase create(Ref ref) {
-    return signOut(ref);
+    return signOutUseCase(ref);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -52,4 +52,4 @@ final class SignOutProvider
   }
 }
 
-String _$signOutHash() => r'a52ac5d77c13389400bd0f0cd26097ac0d7c88a1';
+String _$signOutUseCaseHash() => r'ba875ddff76c45a21fd24c1b05698481b380f835';

@@ -1,20 +1,16 @@
 part of '../home_page.dart';
 
-final class _HomeBody extends StatelessWidget {
+final class _HomeBody extends ConsumerWidget {
   const _HomeBody({
     required this.state,
     required this.onReload,
-    required this.onSignOut,
-    required this.isAuthLoading,
   });
 
   final HomeUiState state;
   final Future<void> Function()? onReload;
-  final Future<void> Function()? onSignOut;
-  final bool isAuthLoading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
     final topWorks = state.recommended.isNotEmpty
@@ -24,12 +20,7 @@ final class _HomeBody extends StatelessWidget {
     final navigationTopPadding = MediaQuery.paddingOf(context).top;
 
     final contentChildren = <Widget>[
-      _TopHeroCarousel(
-        works: topWorks.toList(),
-        onReload: onReload,
-        onSignOut: onSignOut,
-        isAuthLoading: isAuthLoading,
-      ),
+      _TopHeroCarousel(works: topWorks.toList()),
       const SizedBox(height: 16),
       const _SectionTitleRow(
         title: '今期の話題',
@@ -45,6 +36,11 @@ final class _HomeBody extends StatelessWidget {
         const SizedBox(height: 20),
       ],
     ];
+
+    Future<void> onPressedSignOut() {
+      final usecase = ref.read(signOutUseCaseProvider);
+      return usecase();
+    }
 
     return ColoredBox(
       color: scaffoldBackgroundColor,
@@ -145,11 +141,9 @@ final class _HomeBody extends StatelessWidget {
                     ),
                   ],
                   onSelected: (index, item) async {
-                    if (isAuthLoading) return;
-                    if (item.value != 'logout') return;
-                    final signOut = onSignOut;
-                    if (signOut == null) return;
-                    await signOut();
+                    if (item.value == 'logout') {
+                      await onPressedSignOut();
+                    }
                   },
                 ),
               ),

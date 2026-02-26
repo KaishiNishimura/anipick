@@ -1,10 +1,10 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:anipick/application/usecases/auth/sign_out.dart';
 import 'package:anipick/core/error/ui_error.dart';
 import 'package:anipick/core/theme/app_colors.dart';
 import 'package:anipick/core/theme/app_text_styles.dart';
 import 'package:anipick/domain/entities/work.dart';
 import 'package:anipick/presentation/pages/home/home_ui_state.dart';
-import 'package:anipick/provider/auth_controller.dart';
 import 'package:anipick/provider/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,6 @@ final class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authControllerProvider);
     final asyncState = ref.watch(homeControllerProvider);
 
     return AdaptiveScaffold(
@@ -36,16 +35,10 @@ final class HomePage extends ConsumerWidget {
         skipLoadingOnRefresh: true,
         data: (state) => _HomeBody(
           state: state,
-          isAuthLoading: auth.isLoading,
           onReload: asyncState.isLoading
               ? null
               : () async {
                   await ref.read(homeControllerProvider.notifier).reload();
-                },
-          onSignOut: auth.isLoading
-              ? null
-              : () async {
-                  await ref.read(authControllerProvider.notifier).signOut();
                 },
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
