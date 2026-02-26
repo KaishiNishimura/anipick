@@ -1,8 +1,8 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/core/theme/app_theme.dart';
-import 'package:anipick/features/auth/provider/auth_controller.dart';
-import 'package:anipick/views/pages/home/home_page.dart';
-import 'package:anipick/views/pages/login/login_page.dart';
+import 'package:anipick/presentation/pages/home/home_page.dart';
+import 'package:anipick/presentation/pages/login/login_page.dart';
+import 'package:anipick/provider/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
