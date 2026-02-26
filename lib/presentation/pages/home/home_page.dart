@@ -4,7 +4,7 @@ import 'package:anipick/application/usecases/home/refresh_season_works.dart';
 import 'package:anipick/core/theme/app_colors.dart';
 import 'package:anipick/core/theme/app_text_styles.dart';
 import 'package:anipick/domain/entities/work.dart';
-import 'package:anipick/provider/home_controller.dart';
+import 'package:anipick/provider/season_works_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

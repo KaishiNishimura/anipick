@@ -1,4 +1,4 @@
-import 'package:anipick/provider/home_controller.dart';
+import 'package:anipick/provider/season_works_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'refresh_season_works.g.dart';
