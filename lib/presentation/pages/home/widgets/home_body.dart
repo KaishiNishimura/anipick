@@ -1,44 +1,19 @@
 part of '../home_page.dart';
 
 final class _HomeBody extends ConsumerWidget {
-  const _HomeBody({
-    required this.state,
-    required this.onReload,
-  });
-
-  final HomeUiState state;
-  final Future<void> Function()? onReload;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
-    final topWorks = state.recommended.isNotEmpty
-        ? state.recommended
-        : state.currentTrending.take(5);
-
     final navigationTopPadding = MediaQuery.paddingOf(context).top;
-
-    final contentChildren = <Widget>[
-      _TopHeroCarousel(works: topWorks.toList()),
-      const SizedBox(height: 16),
-      const _SectionTitleRow(
-        title: '今期の話題',
-        trailing: Icon(Icons.chevron_right, size: 18),
-      ),
-      const SizedBox(height: 12),
-      _PosterRow(works: state.currentTrending.take(20).toList()),
-      const SizedBox(height: 20),
-      for (final seasonWorks in state.previousSeasonTrending) ...[
-        _SeasonHeader(title: seasonWorks.seasonText),
-        const SizedBox(height: 12),
-        _PosterRow(works: seasonWorks.works.take(20).toList()),
-        const SizedBox(height: 20),
-      ],
-    ];
 
     Future<void> onPressedSignOut() {
       final usecase = ref.read(signOutUseCaseProvider);
+      return usecase();
+    }
+
+    Future<void> onRefresh() async {
+      final usecase = ref.read(refreshSeasonWorksUseCaseProvider);
       return usecase();
     }
 
@@ -100,25 +75,14 @@ final class _HomeBody extends ConsumerWidget {
                         ),
                       );
                     },
-                onRefresh: () async {
-                  final reload = onReload;
-                  if (reload == null) return;
-                  await Future.wait([
-                    reload(),
-                    Future<void>.delayed(
-                      const Duration(milliseconds: 800),
-                    ),
-                  ]);
-                },
+                onRefresh: onRefresh,
               ),
               SliverPadding(
                 padding: EdgeInsets.only(
                   top: navigationTopPadding,
                   bottom: 24,
                 ),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(contentChildren),
-                ),
+                sliver: _HomeContent(),
               ),
             ],
           ),

@@ -10,52 +10,47 @@ part of 'get_season_works.dart';
 // ignore_for_file: type=lint, type=warning
 /// シーズン作品一覧取得ユースケースを提供
 
-@ProviderFor(getSeasonWorks)
-final getSeasonWorksProvider = GetSeasonWorksProvider._();
+@ProviderFor(getSeasonWorksUseCase)
+final getSeasonWorksUseCaseProvider = GetSeasonWorksUseCaseProvider._();
 
 /// シーズン作品一覧取得ユースケースを提供
 
-final class GetSeasonWorksProvider
+final class GetSeasonWorksUseCaseProvider
     extends
         $FunctionalProvider<
+          AsyncValue<GetSeasonWorksUseCase>,
           GetSeasonWorksUseCase,
-          GetSeasonWorksUseCase,
-          GetSeasonWorksUseCase
+          FutureOr<GetSeasonWorksUseCase>
         >
-    with $Provider<GetSeasonWorksUseCase> {
+    with
+        $FutureModifier<GetSeasonWorksUseCase>,
+        $FutureProvider<GetSeasonWorksUseCase> {
   /// シーズン作品一覧取得ユースケースを提供
-  GetSeasonWorksProvider._()
+  GetSeasonWorksUseCaseProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'getSeasonWorksProvider',
+        name: r'getSeasonWorksUseCaseProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$getSeasonWorksHash();
+  String debugGetCreateSourceHash() => _$getSeasonWorksUseCaseHash();
 
   @$internal
   @override
-  $ProviderElement<GetSeasonWorksUseCase> $createElement(
+  $FutureProviderElement<GetSeasonWorksUseCase> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  GetSeasonWorksUseCase create(Ref ref) {
-    return getSeasonWorks(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(GetSeasonWorksUseCase value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<GetSeasonWorksUseCase>(value),
-    );
+  FutureOr<GetSeasonWorksUseCase> create(Ref ref) {
+    return getSeasonWorksUseCase(ref);
   }
 }
 
-String _$getSeasonWorksHash() => r'54d8fa359c7b3154b249e2854a3ab9a66e904cfd';
+String _$getSeasonWorksUseCaseHash() =>
+    r'2da938b6f5062a943b704b3e2fabb222da4da39f';

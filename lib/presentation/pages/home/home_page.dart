@@ -1,17 +1,18 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:anipick/application/usecases/auth/sign_out.dart';
-import 'package:anipick/core/error/ui_error.dart';
+import 'package:anipick/application/usecases/home/refresh_season_works.dart';
 import 'package:anipick/core/theme/app_colors.dart';
 import 'package:anipick/core/theme/app_text_styles.dart';
 import 'package:anipick/domain/entities/work.dart';
-import 'package:anipick/presentation/pages/home/home_ui_state.dart';
 import 'package:anipick/provider/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 part 'widgets/glass_circle_button.dart';
 part 'widgets/home_body.dart';
+part 'widgets/home_content.dart';
 part 'widgets/page_dots.dart';
 part 'widgets/poster_item.dart';
 part 'widgets/poster_row.dart';
@@ -27,45 +28,8 @@ final class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncState = ref.watch(homeControllerProvider);
-
     return AdaptiveScaffold(
-      body: asyncState.when(
-        skipLoadingOnReload: true,
-        skipLoadingOnRefresh: true,
-        data: (state) => _HomeBody(
-          state: state,
-          onReload: asyncState.isLoading
-              ? null
-              : () async {
-                  await ref.read(homeControllerProvider.notifier).reload();
-                },
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) {
-          final uiError = e is UiError
-              ? e
-              : const UiError(message: '予期しないエラーが発生しました');
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(uiError.message),
-                  const SizedBox(height: 12),
-                  AdaptiveButton.child(
-                    onPressed: () async {
-                      await ref.read(homeControllerProvider.notifier).reload();
-                    },
-                    child: const Text('再試行'),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+      body: _HomeBody(),
     );
   }
 }
