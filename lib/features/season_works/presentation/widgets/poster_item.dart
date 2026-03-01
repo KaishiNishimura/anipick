@@ -1,12 +1,17 @@
 import 'package:anipick/core/theme/app_colors.dart';
 import 'package:anipick/core/theme/app_text_styles.dart';
+import 'package:anipick/core/widgets/network_image_with_fallback.dart';
 import 'package:anipick/features/season_works/domain/work.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 /// 個別作品ポスター
 final class PosterItem extends StatelessWidget {
   /// ウィジェットを作成
   const PosterItem({required this.work, super.key});
+
+  static const _width = 180.0;
+  static const _borderRadius = 10.0;
 
   /// 表示する作品
   final Work work;
@@ -14,31 +19,26 @@ final class PosterItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageUrl = work.recommendedImageUrl;
+
     return SizedBox(
-      width: 180,
+      width: _width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AspectRatio(
             aspectRatio: 16 / 9,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: imageUrl != null
-                  ? Image.network(
-                      imageUrl.toString(),
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
-                        return const ColoredBox(color: AppColors.accent_700);
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const ColoredBox(color: AppColors.accent_700);
-                      },
-                    )
-                  : const ColoredBox(color: AppColors.accent_700),
+              borderRadius: BorderRadius.circular(_borderRadius),
+              child: switch (imageUrl) {
+                final url? => NetworkImageWithFallback(
+                  url: url.toString(),
+                  fallbackColor: AppColors.accent_700,
+                ),
+                null => const ColoredBox(color: AppColors.accent_700),
+              },
             ),
           ),
-          const SizedBox(height: 4),
+          const Gap(4),
           Text(
             work.title,
             maxLines: 2,

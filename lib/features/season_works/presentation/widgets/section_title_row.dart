@@ -10,6 +10,9 @@ final class SectionTitleRow extends StatelessWidget {
     super.key,
   });
 
+  static const _horizontalPadding = 20.0;
+  static const _trailingIconOpacity = 0.6;
+
   /// タイトル
   final String title;
 
@@ -19,7 +22,7 @@ final class SectionTitleRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: _horizontalPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -35,7 +38,7 @@ final class SectionTitleRow extends StatelessWidget {
           ),
           IconTheme(
             data: IconThemeData(
-              color: Colors.white.withValues(alpha: 0.6),
+              color: Colors.white.withValues(alpha: _trailingIconOpacity),
             ),
             child: Align(
               alignment: Alignment.centerRight,

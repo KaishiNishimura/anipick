@@ -6,13 +6,17 @@ final class SeasonHeader extends StatelessWidget {
   /// ウィジェットを作成
   const SeasonHeader({required this.title, super.key});
 
+  static const _horizontalPadding = 20.0;
+  static const _chevronSize = 18.0;
+  static const _chevronOpacity = 0.6;
+
   /// シーズン名
   final String title;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: _horizontalPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -30,8 +34,8 @@ final class SeasonHeader extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: Icon(
               Icons.chevron_right,
-              size: 18,
-              color: Colors.white.withValues(alpha: 0.6),
+              size: _chevronSize,
+              color: Colors.white.withValues(alpha: _chevronOpacity),
             ),
           ),
         ],

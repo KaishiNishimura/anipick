@@ -11,6 +11,8 @@ final class GlassCircleButton extends StatelessWidget {
     super.key,
   });
 
+  static const _buttonSize = 50.0;
+
   /// アイコン
   final IconData icon;
 
@@ -20,13 +22,13 @@ final class GlassCircleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(500),
+      borderRadius: BorderRadius.circular(_buttonSize),
       child: AdaptiveButton.child(
         onPressed: onPressed,
         color: AppColors.accent_300,
         child: SizedBox(
-          width: 50,
-          height: 50,
+          width: _buttonSize,
+          height: _buttonSize,
           child: Icon(icon, color: AppColors.accent_700),
         ),
       ),
