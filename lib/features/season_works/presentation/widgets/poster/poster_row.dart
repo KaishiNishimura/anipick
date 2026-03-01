@@ -1,5 +1,5 @@
 import 'package:anipick/features/season_works/domain/work.dart';
-import 'package:anipick/features/season_works/presentation/widgets/poster_item.dart';
+import 'package:anipick/features/season_works/presentation/widgets/poster/poster_item.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
