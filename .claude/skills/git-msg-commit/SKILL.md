@@ -1,5 +1,5 @@
 ---
-name: commit-msg
+name: git-msg-commit
 description: 現在の変更内容を分析しコミットメッセージを生成（コミットは実行しない）
 disable-model-invocation: true
 allowed-tools:
