@@ -86,7 +86,20 @@ while IFS= read -r line; do
 done < <(grep -rn "^class \b" lib/features/ --include="*.dart" 2>/dev/null \
   | grep -v "\.g\.dart\|\.freezed\.dart" || true)
 
-# --- 6. 生成ファイル欠落チェック ---
+# --- 6. 手動 Provider 定義チェック ---
+# @riverpod を使わず手動で Provider を定義しているファイルを検出
+manual_providers=$(grep -rn \
+  'final .*Provider\s*=\s*\(Provider\|StateProvider\|FutureProvider\|StreamProvider\|NotifierProvider\|AsyncNotifierProvider\|StateNotifierProvider\|ChangeNotifierProvider\)\b' \
+  lib/ --include="*.dart" 2>/dev/null \
+  | grep -v '\.g\.dart\|\.freezed\.dart' || true)
+if [ -n "$manual_providers" ]; then
+  while IFS= read -r line; do
+    [ -z "$line" ] && continue
+    errors+=("設計違反: 手動 Provider 定義を @riverpod アノテーションに置き換えてください — $line")
+  done <<< "$manual_providers"
+fi
+
+# --- 7. 生成ファイル欠落チェック ---
 # @riverpod → .g.dart が必要
 while IFS= read -r f; do
   [ -z "$f" ] && continue

@@ -64,7 +64,7 @@ lib/
 
 **主要パターン:**
 
-- Provider は各ファイルで `@riverpod` アノテーションで定義
+- Provider は **必ず** `@riverpod` アノテーションで定義（手動の `final xxxProvider = Provider(...)` は禁止）
 - Controller は `AsyncNotifier<T>` を拡張、状態は `AsyncValue<T>`
 - モデルは全て `@freezed` で定義（copyWith, ==, hashCode 自動生成）。
   Entity は `fromJson` ファクトリで JSON パースも担う（DTO 層は不要）

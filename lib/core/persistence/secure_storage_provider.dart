@@ -1,7 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-/// セキュアストレージを提供
-final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+part 'secure_storage_provider.g.dart';
+
+/// セキュアストレージ提供
+@riverpod
+FlutterSecureStorage secureStorage(Ref ref) {
   return const FlutterSecureStorage();
-});
+}

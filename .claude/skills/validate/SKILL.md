@@ -32,7 +32,7 @@ allowed-tools:
 
 ## チェック項目
 
-スクリプトは以下の6カテゴリをチェックする:
+スクリプトは以下の7カテゴリをチェックする:
 
 ### ドキュメント整合性
 
@@ -44,6 +44,10 @@ allowed-tools:
 - **配置ルール**: Controller は `presentation/`、Repository・DataSource は `data/`、Service は `domain/` に配置されているか
 - **StatefulWidget 禁止**: `lib/` 配下に `StatefulWidget` / `State<>` が存在しないか
 - **final class**: 具象クラスが `final class` で宣言されているか（freezed / abstract / sealed 除外）
+
+### Provider 定義
+
+- **手動 Provider 禁止**: `final xxxProvider = Provider(...)` 等の手動定義がないか（`@riverpod` アノテーションを使用すること）
 
 ### コード生成
 
