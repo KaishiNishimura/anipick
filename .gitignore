@@ -29,6 +29,9 @@ build/
 # dartdoc
 doc/api/
 
+# Claude Code (user-specific settings)
+.claude/settings.local.json
+
 # Local env files (secrets)
 env/*.json
 !env/*.json.example
@@ -74,3 +77,6 @@ windows/flutter/ephemeral/
 
 # Linux
 linux/flutter/ephemeral/
+
+# Android bug reports
+bugreport-*.zip
