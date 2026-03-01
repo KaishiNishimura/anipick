@@ -1,21 +1,10 @@
-import 'package:anipick/main.dart';
-import 'package:flutter/material.dart';
+import 'package:anipick/app/app.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('App smoke test', (tester) async {
+    await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pump();
-
-    expect(
-      find.byWidgetPredicate((widget) => widget is Text && widget.data == '0'),
-      findsOneWidget,
-    );
   });
 }

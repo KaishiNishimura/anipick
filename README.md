@@ -14,11 +14,11 @@ iOS/Android 向けの Annict クライアント（Flutter）。
 
 ## 画面収録
 
-https://github.com/user-attachments/assets/2a18280b-ab78-4dcf-bd87-8a4e74570d71
+<https://github.com/user-attachments/assets/2a18280b-ab78-4dcf-bd87-8a4e74570d71>
 
-https://github.com/user-attachments/assets/dd7d52a7-3d20-4537-b3bf-664d14876203
+<https://github.com/user-attachments/assets/dd7d52a7-3d20-4537-b3bf-664d14876203>
 
-https://github.com/user-attachments/assets/6434f684-b756-4c55-8cba-f6f1a39ea436
+<https://github.com/user-attachments/assets/6434f684-b756-4c55-8cba-f6f1a39ea436>
 
 ---
 
@@ -89,10 +89,7 @@ fvm dart run build_runner build -d
 
 ## アーキテクチャ
 
-設計方針は以下を参照してください。
-
-- `docs/architecture.md`
-- `docs/architecture_example.md`
+設計方針は `CLAUDE.md` を参照してください。
 
 エントリポイント：
 
@@ -103,12 +100,11 @@ fvm dart run build_runner build -d
 
 ## 認証（OAuth）の実装位置
 
-- 横断状態（セッション）：`lib/features/auth/provider/auth_controller.dart`
+- 横断状態（セッション）：`lib/features/auth/presentation/auth_controller.dart`
 - feature 実装：`lib/features/auth/`
-  - Remote：`lib/features/auth/data/datasources/remote/auth_remote_datasource.dart`
-  - Local：`lib/features/auth/data/datasources/local/auth_local_datasource.dart`
-  - Repository：`lib/features/auth/data/repositories/auth_repository_impl.dart`
-  - UseCase：`lib/features/auth/domain/usecases/*`
+  - Remote：`lib/features/auth/data/auth_remote_datasource.dart`
+  - Local：`lib/features/auth/data/auth_local_datasource.dart`
+  - Repository：`lib/features/auth/data/auth_repository.dart`
 
 ---
 
