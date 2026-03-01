@@ -42,7 +42,6 @@ final class TopHeroCarousel extends HookConsumerWidget {
                         title: '',
                         seasonName: '',
                         seasonNameText: '',
-                        recommendedImageUrl: null,
                         watchersCount: 0,
                       )
                     : state.recommended[pageIndex];
@@ -61,9 +60,9 @@ final class TopHeroCarousel extends HookConsumerWidget {
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
-                                if (imageUrl != null && imageUrl.isNotEmpty)
+                                if (imageUrl != null)
                                   Image.network(
-                                    imageUrl,
+                                    imageUrl.toString(),
                                     fit: BoxFit.cover,
                                     loadingBuilder: (context, child, progress) {
                                       if (progress == null) return child;

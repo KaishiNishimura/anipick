@@ -59,14 +59,15 @@ lib/
 | --- | --- |
 | Controller (AsyncNotifier) | AsyncValue 状態管理、UIアクション受付 |
 | Service | ドメインロジック（計算・変換）、ステートレス |
-| Repository | データ取得/保存 + DTO→Entity変換 + AppException throw |
+| Repository | データ取得/保存 + JSON→Entity変換 + AppException throw |
 | DataSource | API通信/ローカル永続化、生データを返す |
 
 **主要パターン:**
 
 - Provider は各ファイルで `@riverpod` アノテーションで定義
 - Controller は `AsyncNotifier<T>` を拡張、状態は `AsyncValue<T>`
-- モデルは全て `@freezed` で定義（copyWith, ==, hashCode 自動生成）
+- モデルは全て `@freezed` で定義（copyWith, ==, hashCode 自動生成）。
+  Entity は `fromJson` ファクトリで JSON パースも担う（DTO 層は不要）
 - エラー処理: Repository が `AppException`（freezed sealed class）を throw →
   Riverpod が `AsyncValue.error` に変換 → UI が `.when(error:)` で表示
 - ルーティング: `go_router` + `authControllerProvider` を watch して認証リダイレクト
@@ -100,7 +101,7 @@ DataSource → API / LocalStorage
 
 ## 新機能作成チェックリスト
 
-1. `domain/` に Entity（`@freezed`）と Service を作る
+1. `domain/` に Entity（`@freezed` + `fromJson`）と Service を作る
 2. `data/` に DataSource と Repository（`final class`）を作る
 3. `@riverpod` で DataSource → Repository → Controller の順に provider を定義
 4. `presentation/` に Controller（AsyncNotifier）と Page/Widget を作る

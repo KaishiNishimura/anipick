@@ -1,6 +1,5 @@
 import 'package:anipick/core/exceptions/app_exception.dart';
 import 'package:anipick/core/network/http_exception.dart';
-import 'package:anipick/features/season_works/data/work_dto.dart';
 import 'package:anipick/features/season_works/data/work_remote_datasource.dart';
 import 'package:anipick/features/season_works/domain/work.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -35,8 +34,7 @@ final class WorkRepository {
 
       return worksJson
           .whereType<Map<String, dynamic>>()
-          .map(WorkDto.fromJson)
-          .map((dto) => dto.toEntity())
+          .map(Work.fromJson)
           .toList()
         ..sort((a, b) => b.watchersCount.compareTo(a.watchersCount));
     } on HttpException catch (e) {
@@ -67,8 +65,7 @@ final class WorkRepository {
 
       final works = worksJson
           .whereType<Map<String, dynamic>>()
-          .map(WorkDto.fromJson)
-          .map((dto) => dto.toEntity())
+          .map(Work.fromJson)
           .toList();
 
       if (works.isEmpty) {

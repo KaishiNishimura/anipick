@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Work {
 
- int get id; String get title; String get seasonName; String get seasonNameText; String? get recommendedImageUrl; int get watchersCount;
+ int get id; String get title; String get seasonName; String get seasonNameText; int get watchersCount; Uri? get imageUrl; Uri? get facebookOgImageUrl; Uri? get twitterImageUrl;
 /// Create a copy of Work
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $WorkCopyWith<Work> get copyWith => _$WorkCopyWithImpl<Work>(this as Work, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Work&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.seasonName, seasonName) || other.seasonName == seasonName)&&(identical(other.seasonNameText, seasonNameText) || other.seasonNameText == seasonNameText)&&(identical(other.recommendedImageUrl, recommendedImageUrl) || other.recommendedImageUrl == recommendedImageUrl)&&(identical(other.watchersCount, watchersCount) || other.watchersCount == watchersCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Work&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.seasonName, seasonName) || other.seasonName == seasonName)&&(identical(other.seasonNameText, seasonNameText) || other.seasonNameText == seasonNameText)&&(identical(other.watchersCount, watchersCount) || other.watchersCount == watchersCount)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.facebookOgImageUrl, facebookOgImageUrl) || other.facebookOgImageUrl == facebookOgImageUrl)&&(identical(other.twitterImageUrl, twitterImageUrl) || other.twitterImageUrl == twitterImageUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,seasonName,seasonNameText,recommendedImageUrl,watchersCount);
+int get hashCode => Object.hash(runtimeType,id,title,seasonName,seasonNameText,watchersCount,imageUrl,facebookOgImageUrl,twitterImageUrl);
 
 @override
 String toString() {
-  return 'Work(id: $id, title: $title, seasonName: $seasonName, seasonNameText: $seasonNameText, recommendedImageUrl: $recommendedImageUrl, watchersCount: $watchersCount)';
+  return 'Work(id: $id, title: $title, seasonName: $seasonName, seasonNameText: $seasonNameText, watchersCount: $watchersCount, imageUrl: $imageUrl, facebookOgImageUrl: $facebookOgImageUrl, twitterImageUrl: $twitterImageUrl)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $WorkCopyWith<$Res>  {
   factory $WorkCopyWith(Work value, $Res Function(Work) _then) = _$WorkCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String seasonName, String seasonNameText, String? recommendedImageUrl, int watchersCount
+ int id, String title, String seasonName, String seasonNameText, int watchersCount, Uri? imageUrl, Uri? facebookOgImageUrl, Uri? twitterImageUrl
 });
 
 
@@ -62,15 +62,17 @@ class _$WorkCopyWithImpl<$Res>
 
 /// Create a copy of Work
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? seasonName = null,Object? seasonNameText = null,Object? recommendedImageUrl = freezed,Object? watchersCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? seasonName = null,Object? seasonNameText = null,Object? watchersCount = null,Object? imageUrl = freezed,Object? facebookOgImageUrl = freezed,Object? twitterImageUrl = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,seasonName: null == seasonName ? _self.seasonName : seasonName // ignore: cast_nullable_to_non_nullable
 as String,seasonNameText: null == seasonNameText ? _self.seasonNameText : seasonNameText // ignore: cast_nullable_to_non_nullable
-as String,recommendedImageUrl: freezed == recommendedImageUrl ? _self.recommendedImageUrl : recommendedImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,watchersCount: null == watchersCount ? _self.watchersCount : watchersCount // ignore: cast_nullable_to_non_nullable
-as int,
+as String,watchersCount: null == watchersCount ? _self.watchersCount : watchersCount // ignore: cast_nullable_to_non_nullable
+as int,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as Uri?,facebookOgImageUrl: freezed == facebookOgImageUrl ? _self.facebookOgImageUrl : facebookOgImageUrl // ignore: cast_nullable_to_non_nullable
+as Uri?,twitterImageUrl: freezed == twitterImageUrl ? _self.twitterImageUrl : twitterImageUrl // ignore: cast_nullable_to_non_nullable
+as Uri?,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String seasonName,  String seasonNameText,  String? recommendedImageUrl,  int watchersCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String seasonName,  String seasonNameText,  int watchersCount,  Uri? imageUrl,  Uri? facebookOgImageUrl,  Uri? twitterImageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Work() when $default != null:
-return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that.recommendedImageUrl,_that.watchersCount);case _:
+return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that.watchersCount,_that.imageUrl,_that.facebookOgImageUrl,_that.twitterImageUrl);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String seasonName,  String seasonNameText,  String? recommendedImageUrl,  int watchersCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String seasonName,  String seasonNameText,  int watchersCount,  Uri? imageUrl,  Uri? facebookOgImageUrl,  Uri? twitterImageUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Work():
-return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that.recommendedImageUrl,_that.watchersCount);case _:
+return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that.watchersCount,_that.imageUrl,_that.facebookOgImageUrl,_that.twitterImageUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String seasonName,  String seasonNameText,  String? recommendedImageUrl,  int watchersCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String seasonName,  String seasonNameText,  int watchersCount,  Uri? imageUrl,  Uri? facebookOgImageUrl,  Uri? twitterImageUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Work() when $default != null:
-return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that.recommendedImageUrl,_that.watchersCount);case _:
+return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that.watchersCount,_that.imageUrl,_that.facebookOgImageUrl,_that.twitterImageUrl);case _:
   return null;
 
 }
@@ -210,16 +212,18 @@ return $default(_that.id,_that.title,_that.seasonName,_that.seasonNameText,_that
 /// @nodoc
 
 
-class _Work implements Work {
-  const _Work({required this.id, required this.title, required this.seasonName, required this.seasonNameText, required this.recommendedImageUrl, required this.watchersCount});
+class _Work extends Work {
+  const _Work({required this.id, required this.title, required this.seasonName, required this.seasonNameText, required this.watchersCount, this.imageUrl, this.facebookOgImageUrl, this.twitterImageUrl}): super._();
   
 
 @override final  int id;
 @override final  String title;
 @override final  String seasonName;
 @override final  String seasonNameText;
-@override final  String? recommendedImageUrl;
 @override final  int watchersCount;
+@override final  Uri? imageUrl;
+@override final  Uri? facebookOgImageUrl;
+@override final  Uri? twitterImageUrl;
 
 /// Create a copy of Work
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +235,16 @@ _$WorkCopyWith<_Work> get copyWith => __$WorkCopyWithImpl<_Work>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Work&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.seasonName, seasonName) || other.seasonName == seasonName)&&(identical(other.seasonNameText, seasonNameText) || other.seasonNameText == seasonNameText)&&(identical(other.recommendedImageUrl, recommendedImageUrl) || other.recommendedImageUrl == recommendedImageUrl)&&(identical(other.watchersCount, watchersCount) || other.watchersCount == watchersCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Work&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.seasonName, seasonName) || other.seasonName == seasonName)&&(identical(other.seasonNameText, seasonNameText) || other.seasonNameText == seasonNameText)&&(identical(other.watchersCount, watchersCount) || other.watchersCount == watchersCount)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.facebookOgImageUrl, facebookOgImageUrl) || other.facebookOgImageUrl == facebookOgImageUrl)&&(identical(other.twitterImageUrl, twitterImageUrl) || other.twitterImageUrl == twitterImageUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,seasonName,seasonNameText,recommendedImageUrl,watchersCount);
+int get hashCode => Object.hash(runtimeType,id,title,seasonName,seasonNameText,watchersCount,imageUrl,facebookOgImageUrl,twitterImageUrl);
 
 @override
 String toString() {
-  return 'Work(id: $id, title: $title, seasonName: $seasonName, seasonNameText: $seasonNameText, recommendedImageUrl: $recommendedImageUrl, watchersCount: $watchersCount)';
+  return 'Work(id: $id, title: $title, seasonName: $seasonName, seasonNameText: $seasonNameText, watchersCount: $watchersCount, imageUrl: $imageUrl, facebookOgImageUrl: $facebookOgImageUrl, twitterImageUrl: $twitterImageUrl)';
 }
 
 
@@ -251,7 +255,7 @@ abstract mixin class _$WorkCopyWith<$Res> implements $WorkCopyWith<$Res> {
   factory _$WorkCopyWith(_Work value, $Res Function(_Work) _then) = __$WorkCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String seasonName, String seasonNameText, String? recommendedImageUrl, int watchersCount
+ int id, String title, String seasonName, String seasonNameText, int watchersCount, Uri? imageUrl, Uri? facebookOgImageUrl, Uri? twitterImageUrl
 });
 
 
@@ -268,15 +272,17 @@ class __$WorkCopyWithImpl<$Res>
 
 /// Create a copy of Work
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? seasonName = null,Object? seasonNameText = null,Object? recommendedImageUrl = freezed,Object? watchersCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? seasonName = null,Object? seasonNameText = null,Object? watchersCount = null,Object? imageUrl = freezed,Object? facebookOgImageUrl = freezed,Object? twitterImageUrl = freezed,}) {
   return _then(_Work(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,seasonName: null == seasonName ? _self.seasonName : seasonName // ignore: cast_nullable_to_non_nullable
 as String,seasonNameText: null == seasonNameText ? _self.seasonNameText : seasonNameText // ignore: cast_nullable_to_non_nullable
-as String,recommendedImageUrl: freezed == recommendedImageUrl ? _self.recommendedImageUrl : recommendedImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,watchersCount: null == watchersCount ? _self.watchersCount : watchersCount // ignore: cast_nullable_to_non_nullable
-as int,
+as String,watchersCount: null == watchersCount ? _self.watchersCount : watchersCount // ignore: cast_nullable_to_non_nullable
+as int,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as Uri?,facebookOgImageUrl: freezed == facebookOgImageUrl ? _self.facebookOgImageUrl : facebookOgImageUrl // ignore: cast_nullable_to_non_nullable
+as Uri?,twitterImageUrl: freezed == twitterImageUrl ? _self.twitterImageUrl : twitterImageUrl // ignore: cast_nullable_to_non_nullable
+as Uri?,
   ));
 }
 

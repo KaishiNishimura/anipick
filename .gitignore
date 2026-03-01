@@ -77,3 +77,6 @@ windows/flutter/ephemeral/
 
 # Linux
 linux/flutter/ephemeral/
+
+# Android bug reports
+bugreport-*.zip

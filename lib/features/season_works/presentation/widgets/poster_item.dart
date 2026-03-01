@@ -23,9 +23,9 @@ final class PosterItem extends StatelessWidget {
             aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: imageUrl != null && imageUrl.isNotEmpty
+              child: imageUrl != null
                   ? Image.network(
-                      imageUrl,
+                      imageUrl.toString(),
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, progress) {
                         if (progress == null) return child;
