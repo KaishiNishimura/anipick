@@ -5,12 +5,21 @@ import 'package:anipick/features/auth/presentation/auth_controller.dart';
 import 'package:anipick/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// サインイン画面を表示
 final class LoginPage extends HookConsumerWidget {
   /// 画面を作成
   const LoginPage({super.key});
+
+  static const _logoWidth = 150.0;
+  static const _logoHeight = 119.0;
+  static const _buttonPadding = 20.0;
+  static const _spinnerSize = 18.0;
+  static const _spinnerStrokeWidth = 2.0;
+  static const _logoBottomGap = 20.0;
+  static const _taglineBottomGap = 50.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,17 +56,17 @@ final class LoginPage extends HookConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Assets.images.loginLogo.image(
-                  width: 150,
-                  height: 119,
+                  width: _logoWidth,
+                  height: _logoHeight,
                   fit: BoxFit.contain,
                 ),
-                const SizedBox(height: 20),
+                const Gap(_logoBottomGap),
                 const Text(
                   '次に観るアニメが、すぐ見つかる',
                   textAlign: TextAlign.center,
                   style: AppTextStyles.title2Emphasized,
                 ),
-                const SizedBox(height: 50),
+                const Gap(_taglineBottomGap),
               ],
             ),
           ),
@@ -66,30 +75,34 @@ final class LoginPage extends HookConsumerWidget {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
+                  bottom: _buttonPadding,
+                  left: _buttonPadding,
+                  right: _buttonPadding,
                 ),
                 child: AdaptiveButton.child(
-                  onPressed: isLoading.value ? null : onPressedLogin,
+                  onPressed: switch (isLoading.value) {
+                    true => null,
+                    false => onPressedLogin,
+                  },
                   size: AdaptiveButtonSize.large,
                   color: colorScheme.primary,
                   enabled: !isLoading.value,
-                  child: isLoading.value
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                          ),
-                        )
-                      : const Text(
-                          'Annictアカウントで始める',
-                          style: AppTextStyles.bodyEmphasized,
+                  child: switch (isLoading.value) {
+                    true => const SizedBox(
+                      width: _spinnerSize,
+                      height: _spinnerSize,
+                      child: CircularProgressIndicator(
+                        strokeWidth: _spinnerStrokeWidth,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
                         ),
+                      ),
+                    ),
+                    false => const Text(
+                      'Annictアカウントで始める',
+                      style: AppTextStyles.bodyEmphasized,
+                    ),
+                  },
                 ),
               ),
             ),

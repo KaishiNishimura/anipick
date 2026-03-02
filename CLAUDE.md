@@ -36,7 +36,8 @@ lib/
 │   ├── exceptions/   # AppException（freezed sealed class）
 │   ├── network/      # HTTP クライアント、HTTP 例外
 │   ├── persistence/  # SecureStorage Provider
-│   └── theme/        # カラー、テキストスタイル、テーマ
+│   ├── theme/        # カラー、テキストスタイル、テーマ
+│   └── widgets/      # 共通 Widget（NetworkImageWithFallback 等）
 ├── features/
 │   ├── auth/         # 認証機能
 │   │   ├── data/     # DataSource, Repository
@@ -64,7 +65,8 @@ lib/
 
 **主要パターン:**
 
-- Provider は **必ず** `@riverpod` アノテーションで定義（手動の `final xxxProvider = Provider(...)` は禁止）
+- Provider は **必ず** `@riverpod` アノテーションで定義
+  （手動の `final xxxProvider = Provider(...)` は禁止）
 - Controller は `AsyncNotifier<T>` を拡張、状態は `AsyncValue<T>`
 - モデルは全て `@freezed` で定義（copyWith, ==, hashCode 自動生成）。
   Entity は `fromJson` ファクトリで JSON パースも担う（DTO 層は不要）
@@ -87,7 +89,61 @@ Repository + Service
 DataSource → API / LocalStorage
 ```
 
-## UI 設計ルール
+## Widget 設計ルール
+
+**Widget 分割:**
+
+- 1 Widget = 1 責務。build メソッドのネストが 5 段を超えたら private Widget クラスに分割
+- helper メソッド（`Widget _buildXxx()`）ではなく private Widget クラスを使う
+  （`const` コンストラクタで rebuild スキップ可能、DevTools で見やすい）
+- `const` コンストラクタを付けられる Widget はすべて `const` にする
+
+**Widget 型の選択:**
+
+- Provider を watch/read + hooks → `HookConsumerWidget`
+- Provider を watch/read のみ → `ConsumerWidget`
+- hooks のみ → `HookWidget`
+- どちらも不要 → `StatelessWidget`
+- `StatefulWidget` は禁止
+
+**条件分岐:**
+
+- **switch 式を最優先**で使う（2 分岐でも switch）
+- 三項演算子は使わない
+- `...[]` で複数 Widget を条件付きで挿入
+- Widget ツリー外のロジックは if-else
+
+**Controller アクセス:**
+
+- 子 Widget は基本的に Controller Provider を直接 watch/read する
+- コールバックやデータのバケツリレーは行わない
+- 例外: 汎用 Widget（PosterRow 等）はデータを props で受け取る
+
+**AsyncValue:**
+
+- 1 つの AsyncValue に対して `.when()` / switch は 1 回のみ
+- 「何も表示しない」は `const SizedBox.shrink()`
+
+**スペーサー:**
+
+- スペーサーは `Gap(N)`（`gap` パッケージ）を使用
+- `SizedBox(height:)` / `SizedBox(width:)` のスペーサー用途は禁止
+
+**マジックナンバー禁止:**
+
+- 数値リテラルを Widget に直接書かない
+- `static const _名前 = 値;` で Widget クラスに定義する
+- 対象: width, height, padding, borderRadius, iconSize,
+  strokeWidth, opacity, spacing 等すべてのレイアウト数値
+- Gap の引数も定数を使う（`const Gap(_sectionGap)`）
+- 対象外: 0, 1 のような自明な値、アスペクト比（16/9）、
+  clamp 境界値（0.0, 1.0）
+
+**共通 Widget:**
+
+- `NetworkImageWithFallback`（`lib/core/widgets/`）: ネットワーク画像の表示
+
+**UI フレームワーク:**
 
 - 画面の骨格: `AdaptiveScaffold`、AppBar: `AdaptiveAppBar`、ボタン: `AdaptiveButton`
 - トースト: `AdaptiveSnackBar.show`
@@ -126,6 +182,7 @@ DataSource → API / LocalStorage
 - SecureStorage: `lib/core/persistence/secure_storage_provider.dart`
 - テーマ: `lib/core/theme/app_theme.dart`
 - 環境設定: `lib/core/env/annict_env.dart`
+- 共通 Widget: `lib/core/widgets/network_image_with_fallback.dart`
 
 ## 環境変数
 
